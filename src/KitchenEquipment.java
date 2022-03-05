@@ -2,10 +2,11 @@ public class KitchenEquipment extends Kitchen {
     int 조리시간;
     int 상태; //  0: 사용 안함 1: 조리중 2: 조리 완료 3: 조리 오버(화구에만 해당)
 
+    Food 조리음식;
 
-    public KitchenEquipment(String 이름, String 타입) {
-        this.이름 = 이름;
-        this.타입 = 타입;
+    public KitchenEquipment(String 이름) {
+        super(이름);
+        this.조리시간 = 10; // 품질1 = 10초
     }
 
     public void 조리하기(Food 조리음식){
@@ -18,9 +19,12 @@ public class KitchenEquipment extends Kitchen {
         this.조리음식.조리상태 = 2;
     }
 
-    public void 음료따르기(KitchenIngredient 음료){
-        this.음료 = 음료;
-        System.out.println(this.이름 + "에서 " + this.음료.이름 + " 따르기 시작 ");
+    public void 조리음식초기화(){
+        this.상태 = 0; //// 메소드명이랑 좀 안어울리는 듯
+        this.조리음식 = null;
+    }
+    public void 장비업그레이드(){
+        this.품질 += 1;
     }
 
 

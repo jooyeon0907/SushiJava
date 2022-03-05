@@ -4,7 +4,86 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.GregorianCalendar;
 
+
 public class GameFrame implements ActionListener {
+    // setText
+    public String 태그포맷팅(String 태그, String[] 값들){
+        StringBuffer sb = new StringBuffer();
+        String 값 = "";
+        for (int i = 0; i < 값들.length; i++)값 += 값들[i];
+        return String.valueOf(sb.append("<").append(태그).append(">").append(값).append("</").append(태그).append(">"));
+     }
+    public void set현재매출(int 결제금액){현재매출값.setText(String.valueOf(결제금액));}
+
+    public void set클릭된메뉴(String 이름){클릭된메뉴.setText(이름);}
+    public void init클릭된메뉴(){클릭된메뉴.setText("");}
+
+    String p센터 = "p align=\"center\"";
+    public void init화구(int index){화구들[index].setText("화구"+(index+1));}
+    public void set조리중(String 이름, int index, int 조리시간){
+        String[] p태그들 = new String[]{
+                        태그포맷팅(p센터,  new String[]{이름}),
+                        태그포맷팅(p센터,  new String[]{"조리중"}),
+                        태그포맷팅(p센터,  new String[]{String.valueOf(조리시간)})};
+       화구들[index].setText(태그포맷팅("html", p태그들));
+    }
+    public void set조리완료(String 이름, int index, int 조리시간){
+        String[] p태그들 = new String[]{
+                        태그포맷팅(p센터,  new String[]{이름}),
+                        태그포맷팅(p센터,  new String[]{"조리완료"}),
+                        태그포맷팅(p센터,  new String[]{String.valueOf(조리시간)})};
+       화구들[index].setText(태그포맷팅("html", p태그들));
+    }
+    public void set오버쿡(String 이름, int index, int 조리시간){
+        String[] p태그들 = new String[]{
+                        태그포맷팅(p센터,  new String[]{"탄 "+이름}),
+                        태그포맷팅(p센터,  new String[]{"오버쿡"})};
+       화구들[index].setText(태그포맷팅("html", p태그들));
+    }
+    public void set조리완료(String 이름, int index){
+       String[] p태그들 = new String[]{
+                        태그포맷팅(p센터,  new String[]{이름}),
+                        태그포맷팅(p센터,  new String[]{"조리완료"})};
+       화구들[index].setText(태그포맷팅("html", p태그들));
+    }
+
+
+    public void init토핑대(int index){토핑재료들[index].setText(Game.토핑재료이름들[index]);}
+    public void set토핑중(String 이름, int index, int 토핑시간){
+        String[] p태그들 = new String[]{
+                        태그포맷팅(p센터,  new String[]{이름}),
+                        태그포맷팅(p센터,  new String[]{"토핑중"}),
+                        태그포맷팅(p센터,  new String[]{String.valueOf(토핑시간)})};
+       토핑재료들[index].setText(태그포맷팅("html", p태그들));
+    }
+    public void set토핑완료(String 이름, int index){
+       String[] p태그들 = new String[]{
+                        태그포맷팅(p센터,  new String[]{이름}),
+                        태그포맷팅(p센터,  new String[]{"토핑완료"})};
+       토핑재료들[index].setText(태그포맷팅("html", p태그들));
+    }
+
+
+    public void init음료디스펜스(int index){음료들[index].setText(Game.음료이름들[index]);}
+    public void set음료따르는중(String 이름, int index, int 음료따르는시간){
+        String[] p태그들 = new String[]{
+                        태그포맷팅(p센터,  new String[]{이름}),
+                        태그포맷팅(p센터,  new String[]{"음료따르는중"}),
+                        태그포맷팅(p센터,  new String[]{String.valueOf(음료따르는시간)})};
+       음료들[index].setText(태그포맷팅("html", p태그들));
+    }
+    public void set음료따르기완료(String 이름, int index){
+       String[] p태그들 = new String[]{
+                        태그포맷팅(p센터,  new String[]{이름}),
+                        태그포맷팅(p센터,  new String[]{"음료따르기완료"})};
+       음료들[index].setText(태그포맷팅("html", p태그들));
+    }
+
+
+
+
+
+
     JButton btn1 = new JButton("1번 버튼");
     JButton btn2 = new JButton("2번 버튼");
     JButton btn3 = new JButton("3번 버튼");
@@ -15,11 +94,12 @@ public class GameFrame implements ActionListener {
     JPanel 베이스패널;
 
     JPanel 정보패널;
-        JLabel 타이머;
+        JLabel 타이머; JLabel 타이머값;
         JLabel 목표매출;
-        JLabel 손님수;
-        JLabel 클릭된메뉴이름;
-        JLabel 클릭된메뉴;
+        JPanel 매출패널;
+            JLabel 현재매출값; JLabel 목표매출값;
+        JLabel 손님수; JLabel 손님수값;
+        JLabel 클릭된메뉴이름; JLabel 클릭된메뉴;
     JPanel 손님들패널;
         JLabel[] 주문시간들;
         JLabel[] 손님들;
@@ -43,34 +123,39 @@ public class GameFrame implements ActionListener {
         베이스패널 = new JPanel();
 
         정보패널 = new JPanel();
-            타이머 = new JLabel("타이머");
-            목표매출 = new JLabel("달성 매출 / 목표 매출");
-            손님수 = new JLabel("손님수");
-            클릭된메뉴이름 = new JLabel("클릭된 메뉴 : ");
-            클릭된메뉴 = new JLabel("");
+            타이머 = new JLabel("타이머: "); 타이머값 = new JLabel("1");
+            목표매출 = new JLabel("달성 매출 / 목표 매출: ");
+            매출패널 = new JPanel();
+                현재매출값 = new JLabel("0"); 목표매출값 = new JLabel("/ 30000");
+            손님수 = new JLabel("손님수: "); 손님수값 = new JLabel("0");
+            클릭된메뉴이름 = new JLabel("클릭된 메뉴: "); 클릭된메뉴 = new JLabel("");
 
         손님들패널 = new JPanel();
-//            주문메뉴들 = new JLabel[]{new JLabel("주문메뉴", JLabel.CENTER), new JLabel("주문메뉴", JLabel.CENTER), new JLabel("주문메뉴", JLabel.CENTER), new JLabel("주문메뉴", JLabel.CENTER)};
-            주문시간들 = new JLabel[]{new JLabel("주문시간", JLabel.CENTER), new JLabel("주문시간", JLabel.CENTER), new JLabel("주문시간", JLabel.CENTER), new JLabel("주문시간", JLabel.CENTER)};
-            손님들 = new JLabel[]{new JLabel("손님1", JLabel.CENTER), new JLabel("손님2", JLabel.CENTER), new JLabel("손님3", JLabel.CENTER), new JLabel("손님4", JLabel.CENTER)};
-
+            주문시간들 = new JLabel[Game.픽업대개수];
+            for (int i = 0; i < Game.픽업대개수; i++) 주문시간들[i] = new JLabel("주문시간", JLabel.CENTER);
+            손님들 = new JLabel[Game.픽업대개수];
+            for (int i = 0; i < Game.픽업대개수; i++) 손님들[i] = new JLabel("손님"+(i+1), JLabel.CENTER);
 
         픽업대패널 = new JPanel();
-//            픽업들 = new JButton[]{new JButton("픽업1"), new JButton("픽업2"), new JButton("픽업3"), new JButton("픽업4")};
-            주문메뉴들 = new JButton[]{new JButton("주문메뉴들"), new JButton("주문메뉴들"), new JButton("주문메뉴들"), new JButton("주문메뉴들")};
+            주문메뉴들 = new JButton[Game.픽업대개수];
+            for (int i = 0; i < Game.픽업대개수; i++) 주문메뉴들[i] = new JButton("주문&픽업대");
 
         키친패널 = new JPanel();
             음료패널 = new JPanel();
-                음료들 = new JButton[]{new JButton("콜라"), new JButton("사이다")};
+                음료들 = new JButton[Game.음료이름들.length];
+                for (int i = 0; i < Game.음료이름들.length; i++) 음료들[i] = new JButton(Game.음료이름들[i]);
 
             화구패널 = new JPanel();
-                화구들 = new JButton[]{new JButton("화구1"), new JButton("화구2")}; //  조리중 문구, 조리 시간
+                화구들 = new JButton[Game.화구개수];
+                for (int i = 0; i < Game.화구개수; i++) 화구들[i] = new JButton("화구"+(i+1));
 
             토핑패널 = new JPanel();
-                토핑재료들 = new JButton[]{new JButton("연어"), new JButton("장어"), new JButton("한우")};
+                토핑재료들 = new JButton[Game.토핑재료이름들.length];
+                for (int i = 0; i < Game.토핑재료이름들.length; i++) 토핑재료들[i] = new JButton(Game.토핑재료이름들[i]);
 
             베이스재료패널 = new JPanel();
-                베이스재료들 = new JButton[]{new JButton("쌀"), new JButton("면")};
+                베이스재료들 = new JButton[Game.베이스재료이름들.length];
+                for (int i = 0; i < Game.베이스재료이름들.length; i++) 베이스재료들[i] = new JButton(Game.베이스재료이름들[i]);
 
         하단패널 = new JPanel();
             일시정지 = new JButton("일시정지");
@@ -82,7 +167,7 @@ public class GameFrame implements ActionListener {
         프레임.setResizable(false); // 창 크기 조절 비활성화
         프레임.setLocationRelativeTo(null); // 중간에 창 띄우기 ?
         프레임.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 종료 버튼 설정
-        프레임.setVisible(true); // 프레임 보이기 설정
+//        프레임.setVisible(true); // 프레임 보이기 설정
         프레임.setLayout(null);
 
         //////////////
@@ -98,11 +183,17 @@ public class GameFrame implements ActionListener {
         정보패널.setBounds(0, y, 1000, h);
 //        정보패널.setBackground(SystemColor.red);
         베이스패널.add(정보패널);
-        정보패널.add(타이머);
+        정보패널.add(타이머); 정보패널.add(타이머값);
         정보패널.add(목표매출);
-        정보패널.add(손님수);
-        정보패널.add(클릭된메뉴이름);
-        정보패널.add(클릭된메뉴);
+        정보패널.add(매출패널);
+        매출패널.setLayout(null);
+//        매출패널.setLayout(new GridLayout());
+//        매출패널.setBackground(Color.darkGray);
+        매출패널.add(현재매출값); 매출패널.add(목표매출값);
+        현재매출값.setBounds(0, y, 50, h);
+        목표매출값.setBounds(35, y, 1000, h);
+        정보패널.add(손님수); 정보패널.add(손님수값);
+        정보패널.add(클릭된메뉴이름); 정보패널.add(클릭된메뉴);
 
         y+=h; h=150;
         베이스패널.add(손님들패널);
@@ -181,6 +272,7 @@ public class GameFrame implements ActionListener {
 
 
     }
+
 
 
     @Override

@@ -17,7 +17,6 @@ public class Main {
 //        System.out.println(손님1.주문메뉴);
 
 
-//        new GameFrame();
         Game game = new Game();
         game.게임시작();
     }
