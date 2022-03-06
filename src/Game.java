@@ -34,9 +34,10 @@ public class Game implements ActionListener {
     ArrayList<ToppigTable> 토핑대들;
     ArrayList<Pickup> 픽업대들;
 
+    GameConsole 게임콘솔 = new GameConsole();
+
     Scanner 스캐너 = new Scanner(System.in);
     String 대답;
-
 
     public void 버튼리스너등록() {
         gameFrame = new GameFrame();
@@ -108,139 +109,166 @@ public class Game implements ActionListener {
     public void run스시자바(){
         캐릭터셋팅(); // TODO : 처음 게임 실행 시 유저 이름 입력 받기
         메뉴셋팅(); //
-        메인화면출력();
+        게임콘솔.메인화면출력(this);
     }
-    public void 메인화면출력(){
-        String 대답;
-        System.out.println("""
-                    \n<메인화면>
-                    1. 게임 시작
-                    2. 나의 정보
-                    3. 상점
-                    4. 종료
-                    """);
-        System.out.println(": 숫자를 입력해주세요.");
-        대답 = 숫자대답받기(1, 4);
-        switch(대답){
-            case "1":
-                게임시작();
-                break;
-            case "2":
-                나의정보출력();
-                break;
-            case "3":
-                break;
-            case "4":
-                System.out.println("스시자바를 종료합니다.");
-                System.exit(0);
-                break;
-        }//end switch
-    }
+//    public void 메인화면출력(){
+//        String 대답;
+//        System.out.println("""
+//                    \n<메인화면>
+//                    1. 게임 시작
+//                    2. 나의 정보
+//                    3. 상점
+//                    4. 종료
+//                    """);
+//        System.out.println(": 숫자를 입력해주세요.");
+//        대답 = 숫자대답받기(1, 4);
+//        switch(대답){
+//            case "1":
+//                게임시작();
+//                break;
+//            case "2":
+//                나의정보출력();
+//                break;
+//            case "3":
+//                break;
+//            case "4":
+//                System.out.println("스시자바를 종료합니다.");
+//                System.exit(0);
+//                break;
+//        }//end switch
+//    }
 
-    public void 나의정보출력(){
-        String 대답;
-        System.out.println("""
-\n<나의 정보>
-1. 유저 정보
-2. 재료 정보
-3. 장비 정보
-4. 보유 아이템
-5. 메인화면으로 돌아가기
-                    """);
-        System.out.println(": 숫자를 입력해주세요.");
-        대답 = 숫자대답받기(1, 5);
-        switch(대답){
-            case "1":
-                유저정보출력();
-                break;
-            case "2":
-                재료정보출력();
-                break;
-            case "3":
-                장비정보출력();
-                break;
-            case "4":
-                보유아이템출력();
-            case "5":
-                메인화면출력();
-                break;
-        }//end switch
-    }
-    public void 메인화면으로돌아가기(){
-        System.out.println("\n1. 메인화면으로 돌아가기");
-        String 대답 = 숫자대답받기(1, 1);
-        if(대답.equals("1")) 메인화면출력();
-    }
-    public void 유저정보출력(){
-        System.out.println("\n<유저 정보>");
-        System.out.println("이름 : " + 게임유저.이름);
-        System.out.println("게임레벨 : " + 게임유저.게임레벨);
-        System.out.println("보유코인수 : " + 게임유저.보유코인수);
-        메인화면으로돌아가기();
-    }
-    public void 재료정보출력(){
-        System.out.println("\n<재료 정보>");
-        System.out.println("--베이스 재료----------------------");
-        System.out.println("이름\t\t\t품질\t\t\t가격");
-        System.out.println("---------------------------------");
-        for (int i = 0; i < 베이스재료들.size(); i++){
-            BaseIngredient 베이스재료 = 베이스재료들.get(i);
-            System.out.println(베이스재료.이름 + "\t\t\t" +  베이스재료.품질  +"\t\t\t" + 베이스재료.가격);
-        }
-
-        System.out.println("\n--토핑 재료----------------------");
-        System.out.println("이름\t\t\t품질\t\t\t가격");
-        System.out.println("--------------------------------");
-        for (int i = 0; i < 토핑대들.size(); i++){
-            ToppingIngredient 토핑재료 = 토핑대들.get(i).토핑재료;
-            System.out.println(토핑재료.이름 + "\t\t\t" +  토핑재료.품질  +"\t\t\t" + 토핑재료.가격);
-        }
-
-        System.out.println("\n--음료 재료----------------------");
-        System.out.println("이름\t\t\t품질\t\t\t가격");
-        System.out.println("--------------------------------");
-        for (int i = 0; i < 음료디스펜서.size(); i++){
-            BeverageIngredient 음료재료 = 음료디스펜서.get(i).음료재료;
-            System.out.println(음료재료.이름 + "\t\t\t" +  음료재료.품질  +"\t\t\t" + 음료재료.가격);
-        }
-        메인화면으로돌아가기();
-    }
-
-    public void 장비정보출력(){
-        System.out.println("\n<장비 정보>");
-        System.out.println("--화구--------------------------------");
-        System.out.println("이름\t\t\t품질\t\t\t조리시간");
-        System.out.println("-------------------------------------");
-        for (int i = 0; i < 화구들.size(); i++){
-            Range 화구 = 화구들.get(i);
-            System.out.println(화구.이름 + "\t\t\t" +  화구.품질  +"\t\t\t" + 화구.조리시간);
-        }
-
-        System.out.println();
-        System.out.println("--토핑대------------------------------");
-        System.out.println("이름\t\t\t품질\t\t\t토핑시간");
-        System.out.println("-------------------------------------");
-        for (int i = 0; i < 토핑대들.size(); i++){
-            ToppigTable 토핑대 = 토핑대들.get(i);
-            System.out.println(토핑대.이름 + "\t\t\t" +  토핑대.품질  +"\t\t\t" + 토핑대.조리시간);
-        }
-
-        System.out.println();
-        System.out.println("--음료디스펜서-------------------------");
-        System.out.println("이름\t\t\t품질\t\t\t시간");
-        System.out.println("-------------------------------------");
-        for (int i = 0; i < 음료디스펜서.size(); i++){
-            Dispensor 디스펜서 = 음료디스펜서.get(i);
-            System.out.println(디스펜서.이름 + "\t\t\t" +  디스펜서.품질  +"\t\t\t" + 디스펜서.조리시간);
-        }
-        메인화면으로돌아가기();
-    }
-    public void 보유아이템출력(){
-
-        메인화면으로돌아가기();
-    }
-
-
+//    public void 나의정보출력(){
+//        String 대답;
+//        System.out.println("""
+//\n<나의 정보>
+//1. 유저 정보
+//2. 재료 정보
+//3. 장비 정보
+//4. 보유 아이템
+//5. 메인화면으로 돌아가기
+//                    """);
+//        System.out.println(": 숫자를 입력해주세요.");
+//        대답 = 숫자대답받기(1, 5);
+//        switch(대답){
+//            case "1":
+//                유저정보출력();
+//                break;
+//            case "2":
+//                재료정보출력();
+//                break;
+//            case "3":
+//                장비정보출력();
+//                break;
+//            case "4":
+//                보유아이템출력();
+//            case "5":
+//                게임콘솔.메인화면출력(this);
+//                break;
+//        }//end switch
+//    }
+//    public void 메인화면으로돌아가기(){
+//        System.out.println("\n1. 메인화면으로 돌아가기");
+//        String 대답 = 숫자대답받기(1, 1);
+//        if(대답.equals("1")) 게임콘솔.메인화면출력(this);
+//    }
+//    public void 유저정보출력(){
+//        System.out.println("\n<유저 정보>");
+//        System.out.println("이름 : " + 게임유저.이름);
+//        System.out.println("게임레벨 : " + 게임유저.게임레벨);
+//        System.out.println("보유코인수 : " + 게임유저.보유코인수);
+//        메인화면으로돌아가기();
+//    }
+//    public void 재료정보출력(){
+//        System.out.println("\n<재료 정보>");
+//        System.out.println("--베이스 재료----------------------");
+//        System.out.println("이름\t\t\t품질\t\t\t가격");
+//        System.out.println("---------------------------------");
+//        for (int i = 0; i < 베이스재료들.size(); i++){
+//            BaseIngredient 베이스재료 = 베이스재료들.get(i);
+//            System.out.println(베이스재료.이름 + "\t\t\t" +  베이스재료.품질  +"\t\t\t" + 베이스재료.가격);
+//        }
+//
+//        System.out.println("\n--토핑 재료----------------------");
+//        System.out.println("이름\t\t\t품질\t\t\t가격");
+//        System.out.println("--------------------------------");
+//        for (int i = 0; i < 토핑대들.size(); i++){
+//            ToppingIngredient 토핑재료 = 토핑대들.get(i).토핑재료;
+//            System.out.println(토핑재료.이름 + "\t\t\t" +  토핑재료.품질  +"\t\t\t" + 토핑재료.가격);
+//        }
+//
+//        System.out.println("\n--음료 재료----------------------");
+//        System.out.println("이름\t\t\t품질\t\t\t가격");
+//        System.out.println("--------------------------------");
+//        for (int i = 0; i < 음료디스펜서.size(); i++){
+//            BeverageIngredient 음료재료 = 음료디스펜서.get(i).음료재료;
+//            System.out.println(음료재료.이름 + "\t\t\t" +  음료재료.품질  +"\t\t\t" + 음료재료.가격);
+//        }
+//        메인화면으로돌아가기();
+//    }
+//
+//    public void 장비정보출력(){
+//        System.out.println("\n<장비 정보>");
+//        System.out.println("--화구--------------------------------");
+//        System.out.println("이름\t\t\t품질\t\t\t조리시간");
+//        System.out.println("-------------------------------------");
+//        for (int i = 0; i < 화구들.size(); i++){
+//            Range 화구 = 화구들.get(i);
+//            System.out.println(화구.이름 + "\t\t\t" +  화구.품질  +"\t\t\t" + 화구.조리시간);
+//        }
+//
+//        System.out.println();
+//        System.out.println("--토핑대------------------------------");
+//        System.out.println("이름\t\t\t품질\t\t\t토핑시간");
+//        System.out.println("-------------------------------------");
+//        for (int i = 0; i < 토핑대들.size(); i++){
+//            ToppigTable 토핑대 = 토핑대들.get(i);
+//            System.out.println(토핑대.이름 + "\t\t\t" +  토핑대.품질  +"\t\t\t" + 토핑대.조리시간);
+//        }
+//
+//        System.out.println();
+//        System.out.println("--음료디스펜서-------------------------");
+//        System.out.println("이름\t\t\t품질\t\t\t시간");
+//        System.out.println("-------------------------------------");
+//        for (int i = 0; i < 음료디스펜서.size(); i++){
+//            Dispensor 디스펜서 = 음료디스펜서.get(i);
+//            System.out.println(디스펜서.이름 + "\t\t\t" +  디스펜서.품질  +"\t\t\t" + 디스펜서.조리시간);
+//        }
+//        메인화면으로돌아가기();
+//    }
+//    public void 보유아이템출력(){
+//
+//        메인화면으로돌아가기();
+//    }
+//
+//
+//
+//    public void 일시정지화면(){
+//        this.일시정지 = true;
+//        gameFrame.프레임.setVisible(false);
+//            System.out.println("""
+//                    \n<일시정지>
+//                    1. 게임 재개
+//                    2. 다시 하기
+//                    3. 게임 종료
+//                    """);
+//            System.out.println(": 숫자를 입력해주세요.");
+//            대답 = 숫자대답받기(1, 3);
+//            switch(Integer.parseInt(대답)){
+//                case 1:
+//                    gameFrame.프레임.setVisible(true);
+//                    this.일시정지 = false;
+//                    break;
+//                case 2:
+//                    게임시작();
+//                    this.일시정지 = false;
+//                    break;
+//                case 3:
+//                    System.out.println("게임을 종료합니다.");
+//                    게임콘솔.메인화면출력(this);
+//                    break;
+//            }
+//    }
     //end 콘솔화면 출력///////////////////////////////////////////////////////
 
 
@@ -284,37 +312,6 @@ public class Game implements ActionListener {
         gameFrame.init클릭된메뉴();
     }
 
-    public boolean 숫자이다(String str){
-        boolean result = true;
-        if(str == null || str.length() == 0) result = false;
-        else{
-            for (int i = 0; i < str.length(); i++){
-                if((int)str.charAt(i) < 48  || (int)str.charAt(i) > 57) result=false;
-            }
-        }
-        return result;
-    }
-
-    public String 숫자대답받기(int min, int max){
-        String 대답 = null;
-        while(true){
-                System.out.print("> " );
-                대답 = 스캐너.nextLine();
-                if(!숫자이다(대답)){
-                    System.out.println("숫자가 아닙니다. 숫자를 입력해주세요.");
-                } else if(Integer.parseInt(대답) < min || max < Integer.parseInt(대답)){
-                    System.out.println("범위를 벗어났습니다. 보기에 있는 숫자를 입력해주세요.");
-                } else break;
-            }
-        return 대답;
-    }
-
-    public String 태그포맷팅(String 태그, String[] 값들){
-        StringBuffer sb = new StringBuffer();
-        String 값 = "";
-        for (int i = 0; i < 값들.length; i++)값 += 값들[i];
-        return String.valueOf(sb.append("<").append(태그).append(">").append(값).append("</").append(태그).append(">"));
-     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -387,19 +384,13 @@ public class Game implements ActionListener {
             if(픽업대들.get(i).상태==0) break;
             Pickup 픽업대 = 픽업대들.get(i);
             if(클릭된메뉴 != null && 픽업대.상태==1 &&  ////// 픽업대 주문중 상태이고 클릭된 메뉴가 음료이거나 조리된 음식일 때
-                (클릭된메뉴 instanceof Food && ((Food)클릭된메뉴).조리상태 > 1) || 클릭된메뉴 instanceof Beverage
-            ){ //
-                // 서빙하기
-                // 서빙한 음식이 현재 픽업대 주문메뉴에 해당하는지 체크
-//                게임유저.음식서빙하기(픽업대, ((Food)클릭된메뉴)); ///// 음료일 때 또 따로 Beverage로 형변환해줘야되네
-                Boolean 음식받기 = 픽업대.음식받기(gameFrame, 클릭된메뉴); ///// 음료일 때 또 따로 Beverage로 형변환해줘야되네
+                (클릭된메뉴 instanceof Food && ((Food)클릭된메뉴).조리상태 > 1) || 클릭된메뉴 instanceof Beverage){
+                Boolean 음식받기 = 픽업대.음식받기(gameFrame, 클릭된메뉴);  // 서빙한 음식이 현재 픽업대 주문메뉴에 해당하는지 체크
                 if(음식받기) {
                     gameFrame.픽업대주문메뉴받기(i, String.valueOf(픽업대.손님.주문메뉴));
                     클릭된메뉴초기화();
-                    if(픽업대.손님.주문메뉴.size()< 1){ // 주문메뉴 모두 서빙했다면
-                        System.out.println("주문 clear");
-                        픽업대.주문완료(gameFrame);
-                    }
+                    // 주문메뉴 모두 서빙했다면
+                    if(픽업대.손님.주문메뉴.size()< 1) 픽업대.주문완료(gameFrame);
                 }
             }else if(픽업대.상태==2){
                 게임유저.코인회수하기(gameFrame, 픽업대);
@@ -407,40 +398,12 @@ public class Game implements ActionListener {
             }
         }
 
-        if(e.getSource().equals(gameFrame.일시정지)){  // TODO: 코드정리
-            this.일시정지 = true;
-            gameFrame.프레임.setVisible(false);
-            System.out.println("""
-                    \n<일시정지>
-                    1. 게임 재개
-                    2. 다시 하기
-                    3. 게임 종료
-                    """);
-            System.out.println(": 숫자를 입력해주세요.");
-            대답 = 숫자대답받기(1, 3);
-            switch(Integer.parseInt(대답)){
-                case 1:
-                    gameFrame.프레임.setVisible(true);
-                    this.일시정지 = false;
-                    break;
-                case 2:
-                    게임시작();
-                    this.일시정지 = false;
-                    break;
-                case 3:
-                    System.out.println("게임을 종료합니다.");
-                    메인화면출력();
-                    break;
-            }
-            // 화면 비활성화되고, 스레드들 일시중지 일시정지창 띄우기(이건 콘솔에다가 출력하자..)
-                // - 게임재개 (일시정지창 내리고 화면 활성화. 스레드 재개)
-                // - 다시시작 (스레드 없애고 다시 생성하여 시작)
-                // - 게임종료(알림창 띄운 후 예 선택 시 게임스레드 종료)
-        }else if(e.getSource().equals(gameFrame.쓰레기통)){
+        if(e.getSource().equals(gameFrame.일시정지)) 게임콘솔.일시정지(this);
+        else if(e.getSource().equals(gameFrame.쓰레기통)){
             if(클릭된메뉴!=null){ // 음식 버리기
                 System.out.println("쓰레기통에 " + 클릭된메뉴.이름 + " 버리기");
-//                게임유저.음식버리기(); ////
-                음식버린횟수 += 1;  // 메소드로 관리하고 싶은데 어디에 위치시켜야 적절할까?
+                게임유저.음식버리기(); ////
+//                음식버린횟수 += 1;  // 메소드로 관리하고 싶은데 어디에 위치시켜야 적절할까?
                 클릭된메뉴초기화();
             }
         }

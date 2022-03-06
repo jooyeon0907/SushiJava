@@ -24,6 +24,7 @@ public class Pickup { ///
         return 음식받기;
     }
     public void 주문완료(GameFrame gameFrame){
+        System.out.println("주문 clear");
         Game.손님수 += 1;
         // 손님 스레드 사라짐
         this.손님 = null;
