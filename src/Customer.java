@@ -13,8 +13,7 @@ public class Customer { //  손님
         // 카운트에서 주문하는 것이니까 주문픽업대에 저장시키ㅣㄱ?
         System.out.println("주문 시작 !!!");
         this.주문메뉴 = 주문메뉴;
-        gameFrame.주문메뉴들[위치].setText(String.valueOf(this.주문메뉴)); // 위치 변경
-        gameFrame.주문시간들[위치].setText(String.valueOf(this.기다리는시간)); //  위치 변경
+        gameFrame.손님주문하기(위치, String.valueOf(주문메뉴), 기다리는시간);
 
         // 스레드 생성하여 기다리는 시간 카운트 다운
 

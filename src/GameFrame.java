@@ -2,83 +2,88 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 
 
 public class GameFrame implements ActionListener {
-    // setText
+    //setText///////////////////////////////////////////////////////////////
     public String 태그포맷팅(String 태그, String[] 값들){
         StringBuffer sb = new StringBuffer();
         String 값 = "";
         for (int i = 0; i < 값들.length; i++)값 += 값들[i];
         return String.valueOf(sb.append("<").append(태그).append(">").append(값).append("</").append(태그).append(">"));
      }
-    public void set현재매출(int 결제금액){현재매출값.setText(String.valueOf(결제금액));}
+     public String[] 여러개태그포맷팅(String 태그, String[] 값들){
+        String[] result = new String[값들.length];
+        for (int i = 0; i < 값들.length; i++) result[i] = 태그포맷팅(태그, new String[]{값들[i]});
+        return result;
+     }
+    String p센터 = "p align=\"center\"";
+    public void init화구(int 위치){화구들[위치].setText("화구"+(위치+1));}
 
+    public void set조리중(String 이름, int 위치, int 조리시간){
+        String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "조리중", String.valueOf(조리시간)});
+        화구들[위치].setText(태그포맷팅("html", p태그들));
+    }
+    public void set조리완료(String 이름, int 위치, int 조리시간){ // 오버쿡 되고 있는 상태
+        String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "조리완료", String.valueOf(조리시간)});
+        화구들[위치].setText(태그포맷팅("html", p태그들));
+    }
+    public void set오버쿡(String 이름, int 위치, int 조리시간){
+        String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{"탄 "+이름, "오버쿡"});
+        화구들[위치].setText(태그포맷팅("html", p태그들));
+    }
+    public void set조리완료(String 이름, int 위치){
+        String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "조리완료"});
+        화구들[위치].setText(태그포맷팅("html", p태그들));
+    }
+
+    public void init토핑대(int 위치){토핑재료들[위치].setText(Game.토핑재료이름들[위치]);}
+    public void set토핑중(String 이름, int 위치, int 토핑시간){
+        String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "토핑중", String.valueOf(토핑시간)});
+        토핑재료들[위치].setText(태그포맷팅("html", p태그들));
+    }
+    public void set토핑완료(String 이름, int 위치){
+       String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "토핑완료"});
+       토핑재료들[위치].setText(태그포맷팅("html", p태그들));
+    }
+
+
+    public void init음료디스펜스(int 위치){음료들[위치].setText(Game.음료이름들[위치]);}
+    public void set음료따르는중(String 이름, int 위치, int 음료따르는시간){
+        String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "음료따르는중", String.valueOf(음료따르는시간)});
+        음료들[위치].setText(태그포맷팅("html", p태그들));
+    }
+    public void set음료따르기완료(String 이름, int 위치){
+       String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "음료따르기완료"});
+       음료들[위치].setText(태그포맷팅("html", p태그들));
+    }
+
+
+
+    public void set현재매출(int 결제금액){현재매출값.setText(String.valueOf(결제금액));}
     public void set클릭된메뉴(String 이름){클릭된메뉴.setText(이름);}
     public void init클릭된메뉴(){클릭된메뉴.setText("");}
 
-    String p센터 = "p align=\"center\"";
-    public void init화구(int index){화구들[index].setText("화구"+(index+1));}
-    public void set조리중(String 이름, int index, int 조리시간){
-        String[] p태그들 = new String[]{
-                        태그포맷팅(p센터,  new String[]{이름}),
-                        태그포맷팅(p센터,  new String[]{"조리중"}),
-                        태그포맷팅(p센터,  new String[]{String.valueOf(조리시간)})};
-       화구들[index].setText(태그포맷팅("html", p태그들));
+    public void 픽업대주문메뉴받기(int 위치, String 주문메뉴){주문메뉴들[위치].setText(주문메뉴);}
+    public void 픽업대주문완료(int 결제금액, int 위치){
+        주문메뉴들[위치].setText(Integer.toString(결제금액));
+        손님수값.setText(String.valueOf(Game.손님수));
+        손님들[위치].setText("");
+        주문시간들[위치].setText("");
     }
-    public void set조리완료(String 이름, int index, int 조리시간){
-        String[] p태그들 = new String[]{
-                        태그포맷팅(p센터,  new String[]{이름}),
-                        태그포맷팅(p센터,  new String[]{"조리완료"}),
-                        태그포맷팅(p센터,  new String[]{String.valueOf(조리시간)})};
-       화구들[index].setText(태그포맷팅("html", p태그들));
-    }
-    public void set오버쿡(String 이름, int index, int 조리시간){
-        String[] p태그들 = new String[]{
-                        태그포맷팅(p센터,  new String[]{"탄 "+이름}),
-                        태그포맷팅(p센터,  new String[]{"오버쿡"})};
-       화구들[index].setText(태그포맷팅("html", p태그들));
-    }
-    public void set조리완료(String 이름, int index){
-       String[] p태그들 = new String[]{
-                        태그포맷팅(p센터,  new String[]{이름}),
-                        태그포맷팅(p센터,  new String[]{"조리완료"})};
-       화구들[index].setText(태그포맷팅("html", p태그들));
+    public void 코인회수하기(int 위치){
+        set현재매출(Game.현재매출);
+        주문메뉴들[위치].setText("주문&픽업대");
     }
 
-
-    public void init토핑대(int index){토핑재료들[index].setText(Game.토핑재료이름들[index]);}
-    public void set토핑중(String 이름, int index, int 토핑시간){
-        String[] p태그들 = new String[]{
-                        태그포맷팅(p센터,  new String[]{이름}),
-                        태그포맷팅(p센터,  new String[]{"토핑중"}),
-                        태그포맷팅(p센터,  new String[]{String.valueOf(토핑시간)})};
-       토핑재료들[index].setText(태그포맷팅("html", p태그들));
-    }
-    public void set토핑완료(String 이름, int index){
-       String[] p태그들 = new String[]{
-                        태그포맷팅(p센터,  new String[]{이름}),
-                        태그포맷팅(p센터,  new String[]{"토핑완료"})};
-       토핑재료들[index].setText(태그포맷팅("html", p태그들));
+    public void 손님주문하기(int 위치, String 주문메뉴, int 기다리는시간){
+        주문메뉴들[위치].setText(주문메뉴); // 위치 변경
+        주문시간들[위치].setText(String.valueOf(기다리는시간)); //  위치 변경
     }
 
-
-    public void init음료디스펜스(int index){음료들[index].setText(Game.음료이름들[index]);}
-    public void set음료따르는중(String 이름, int index, int 음료따르는시간){
-        String[] p태그들 = new String[]{
-                        태그포맷팅(p센터,  new String[]{이름}),
-                        태그포맷팅(p센터,  new String[]{"음료따르는중"}),
-                        태그포맷팅(p센터,  new String[]{String.valueOf(음료따르는시간)})};
-       음료들[index].setText(태그포맷팅("html", p태그들));
-    }
-    public void set음료따르기완료(String 이름, int index){
-       String[] p태그들 = new String[]{
-                        태그포맷팅(p센터,  new String[]{이름}),
-                        태그포맷팅(p센터,  new String[]{"음료따르기완료"})};
-       음료들[index].setText(태그포맷팅("html", p태그들));
-    }
-
+    //end setText/////////////////////////////////////////////////////////////
 
 
 
@@ -123,7 +128,7 @@ public class GameFrame implements ActionListener {
         베이스패널 = new JPanel();
 
         정보패널 = new JPanel();
-            타이머 = new JLabel("타이머: "); 타이머값 = new JLabel("1");
+            타이머 = new JLabel("타이머: "); 타이머값 = new JLabel("2분 20초");
             목표매출 = new JLabel("달성 매출 / 목표 매출: ");
             매출패널 = new JPanel();
                 현재매출값 = new JLabel("0"); 목표매출값 = new JLabel("/ 30000");
