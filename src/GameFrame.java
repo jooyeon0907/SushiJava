@@ -20,23 +20,23 @@ public class GameFrame implements ActionListener {
         return result;
      }
     String p센터 = "p align=\"center\"";
-    public void init화구(int 위치){화구들[위치].setText("화구"+(위치+1));}
+    public void init레인지(int 위치){레인지들[위치].setText("레인지"+(위치+1));}
 
     public void set조리중(String 이름, int 위치, int 조리시간){
         String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "조리중", String.valueOf(조리시간)});
-        화구들[위치].setText(태그포맷팅("html", p태그들));
+        레인지들[위치].setText(태그포맷팅("html", p태그들));
     }
     public void set조리완료(String 이름, int 위치, int 조리시간){ // 오버쿡 되고 있는 상태
         String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "조리완료", String.valueOf(조리시간)});
-        화구들[위치].setText(태그포맷팅("html", p태그들));
+        레인지들[위치].setText(태그포맷팅("html", p태그들));
     }
     public void set오버쿡(String 이름, int 위치, int 조리시간){
         String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{"탄 "+이름, "오버쿡"});
-        화구들[위치].setText(태그포맷팅("html", p태그들));
+        레인지들[위치].setText(태그포맷팅("html", p태그들));
     }
     public void set조리완료(String 이름, int 위치){
         String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "조리완료"});
-        화구들[위치].setText(태그포맷팅("html", p태그들));
+        레인지들[위치].setText(태그포맷팅("html", p태그들));
     }
 
     public void init토핑대(int 위치){토핑재료들[위치].setText(Game.토핑재료이름들[위치]);}
@@ -113,8 +113,8 @@ public class GameFrame implements ActionListener {
     JPanel 키친패널;
         JPanel 음료패널;
             JButton[] 음료들;
-        JPanel 화구패널;
-            JButton[] 화구들;
+        JPanel 레인지패널;
+            JButton[] 레인지들;
         JPanel 토핑패널;
             JButton[] 토핑재료들;
         JPanel 베이스재료패널;
@@ -150,9 +150,9 @@ public class GameFrame implements ActionListener {
                 음료들 = new JButton[Game.음료이름들.length];
                 for (int i = 0; i < Game.음료이름들.length; i++) 음료들[i] = new JButton(Game.음료이름들[i]);
 
-            화구패널 = new JPanel();
-                화구들 = new JButton[Game.화구개수];
-                for (int i = 0; i < Game.화구개수; i++) 화구들[i] = new JButton("화구"+(i+1));
+            레인지패널 = new JPanel();
+                레인지들 = new JButton[Game.레인지개수];
+                for (int i = 0; i < Game.레인지개수; i++) 레인지들[i] = new JButton("레인지"+(i+1));
 
             토핑패널 = new JPanel();
                 토핑재료들 = new JButton[Game.토핑재료이름들.length];
@@ -237,11 +237,11 @@ public class GameFrame implements ActionListener {
             음료패널.add(음료들[i]);
         }
 
-        키친패널.add(화구패널);
-        화구패널.setBorder(BorderFactory.createEmptyBorder(0 , 0 , 10 , 10));
-        화구패널.setLayout(new GridLayout());
-        for(int i=0; i<화구들.length; i++){
-            화구패널.add(화구들[i]);
+        키친패널.add(레인지패널);
+        레인지패널.setBorder(BorderFactory.createEmptyBorder(0 , 0 , 10 , 10));
+        레인지패널.setLayout(new GridLayout());
+        for(int i=0; i<레인지들.length; i++){
+            레인지패널.add(레인지들[i]);
         }
 
         키친패널.add(토핑패널);

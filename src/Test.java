@@ -59,13 +59,13 @@ public class Test {
             String 진행상태태그 = "<p>"+"조리중"+"</p>";
             String 시간태그 = "<p>"+"00:10"+"</p>";
             String htmlText = "<html>" + 이름태그 + 진행상태태그 + 시간태그 + "</html>";
-            gameFrame.화구들[0].setText(htmlText);
+            gameFrame.레인지들[0].setText(htmlText);
 
             이름태그 = "<p>"+"탄 밥"+"</p>";
             진행상태태그 = "<p>"+"오버쿡"+"</p>";
             시간태그 = "<p>"+""+"</p>";
             htmlText = "<html>" + 이름태그 + 진행상태태그 + 시간태그 + "</html>";
-            gameFrame.화구들[1].setText(htmlText);
+            gameFrame.레인지들[1].setText(htmlText);
 
             이름태그 = "<p>"+"연어초밥"+"</p>";
             진행상태태그 = "<p>"+"토핑완료"+"</p>";

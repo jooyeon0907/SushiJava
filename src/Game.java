@@ -18,8 +18,10 @@ public class Game implements ActionListener {
     static String[] 베이스재료이름들 = {"쌀", "면"};
     static String[] 토핑재료이름들 = {"연어", "장어", "한우", "참치"};
     static String[] 음료이름들 = {"콜라", "사이다"};
-    static int 화구개수 = 2;
+    static int 레인지개수 = 2;
     static int 픽업대개수 = 4;
+    static int 재료최고품질 = 4;
+    static int 장비최고품질 = 3;
 
 
     GameFrame gameFrame;
@@ -29,7 +31,7 @@ public class Game implements ActionListener {
     ArrayList<BaseIngredient> 베이스재료들;
     ArrayList<ToppingIngredient> 토핑재료들;
     ArrayList<BeverageIngredient> 음료들;
-    ArrayList<Range> 화구들;
+    ArrayList<Range> 레인지들;
     ArrayList<Dispensor> 음료디스펜서;
     ArrayList<ToppigTable> 토핑대들;
     ArrayList<Pickup> 픽업대들;
@@ -45,52 +47,84 @@ public class Game implements ActionListener {
         // addActionListener
         for(int i=0; i<gameFrame.주문메뉴들.length; i++) gameFrame.주문메뉴들[i].addActionListener(this);
         for(int i=0; i<gameFrame.음료들.length; i++)gameFrame.음료들[i].addActionListener(this);
-        for(int i=0; i<gameFrame.화구들.length; i++)gameFrame.화구들[i].addActionListener(this);
+        for(int i=0; i<gameFrame.레인지들.length; i++)gameFrame.레인지들[i].addActionListener(this);
         for(int i=0; i<gameFrame.토핑재료들.length; i++)gameFrame.토핑재료들[i].addActionListener(this);
         for(int i=0; i<gameFrame.베이스재료들.length; i++)gameFrame.베이스재료들[i].addActionListener(this);
         gameFrame.일시정지.addActionListener(this);
         gameFrame.쓰레기통.addActionListener(this);
     }
 
-    public void 캐릭터셋팅(){
+    public void 게임유저셋팅(String 유저이름){
         게임유저 = new GameUser();
-        게임유저.이름 = "유저1";
-        게임유저.보유코인수 = 1000;
+        게임유저.이름 = 유저이름;
+        게임유저.보유코인수 = 20000;
         게임유저.게임레벨 = 1;
+
+        System.out.println(유저이름 + "님이 등록되었습니다.");
     }
 
     public void 아이템셋팅(){}
 
-    public void 메뉴셋팅(){ // 버튼 - 메뉴 객체 연결 짓기 , 주방셋팅?   //// 가격 셋팅하는 부분을 따로 만들어야될듯
-        // 추후 추가되는 아이템이 있다면 이름들 리스트에 이름만 추가하면 for 문을 돌면서 자동으로 추가되도록
+    public void 메뉴셋팅(){  //// 가격 셋팅하는 부분을 따로 만들어야될듯
+        // for문 사용이유 : 추후 추가되는 아이템이 있다면 이름들 리스트에 이름만 추가하면 for 문을 돌면서 자동으로 추가되도록 함 
         베이스재료들 = new ArrayList<BaseIngredient>();
         for (int i = 0; i < 베이스재료이름들.length; i++){
-            베이스재료들.add(new BaseIngredient(베이스재료이름들[i], 600));
+            베이스재료들.add(new BaseIngredient(베이스재료이름들[i]));
         }
 
         // 주방셋팅
-        화구들 = new ArrayList<Range>();
-        for (int i = 0; i < 화구개수; i++){
-            if(i==0) 화구들.add(new Range("화구"+(i+1))); // 처음 게임 시작할 때는 화구 1개만 제공
-            else 화구들.add(new Range("화구"+(i+1), 0)); // 구매 안된 상태로 만들기 위해 품질 0으로 설정
+        레인지들 = new ArrayList<Range>();
+        for (int i = 0; i < 레인지개수; i++){
+            if(i==0) 레인지들.add(new Range("레인지"+(i+1))); // 처음 게임 시작할 때는 레인지 1개만 제공
+            else 레인지들.add(new Range("레인지"+(i+1), 0)); // 구매 안된 상태로 만들기 위해 품질 0으로 설정
         }
 
         음료디스펜서 = new ArrayList<Dispensor>();
         for (int i = 0; i < 음료이름들.length; i++){
-            음료디스펜서.add(new Dispensor(음료이름들[i]+"디스펜서", new BeverageIngredient(음료이름들[i], 450)));
+            음료디스펜서.add(new Dispensor(음료이름들[i]+"디스펜서", new BeverageIngredient(음료이름들[i])));
         }
 
         토핑대들 = new ArrayList<ToppigTable>();
-        int 가격 = 700;
         for (int i = 0; i < 토핑재료이름들.length; i++){
-            토핑대들.add(new ToppigTable(토핑재료이름들[i]+"토핑대", new ToppingIngredient(토핑재료이름들[i], 가격)));
-            가격 += 100;
+            토핑대들.add(new ToppigTable(토핑재료이름들[i]+"토핑대", new ToppingIngredient(토핑재료이름들[i])));
         }
         // 매장 셋팅
         픽업대들 = new ArrayList<Pickup>();
         for (int i = 0; i < 픽업대개수; i++) 픽업대들.add(new Pickup());
     }
 
+    public void 가격셋팅(){
+        //쌀
+        베이스재료들.get(0).재료가격표셋팅(new int[]{600, 900, 1400, 2100}, new int[]{0, 900, 1400, 2100});
+        //면
+        베이스재료들.get(1).재료가격표셋팅(new int[]{500, 800, 1300, 2000}, new int[]{0, 800, 1300, 2000});
+        // 연어
+        토핑대들.get(0).토핑재료.재료가격표셋팅(new int[]{500, 800, 1300, 200}, new int[]{0, 800, 1300, 200});
+        // 장어
+        토핑대들.get(1).토핑재료.재료가격표셋팅(new int[]{800, 1100, 1600, 2300}, new int[]{0, 1100, 1600, 2300});
+        // 한우
+        토핑대들.get(2).토핑재료.재료가격표셋팅(new int[]{900, 1200, 1700, 2400}, new int[]{0, 1200, 1700, 2400});
+        // 참치
+        토핑대들.get(3).토핑재료.재료가격표셋팅(new int[]{1000, 1300, 1800, 2500}, new int[]{0, 1300, 1800, 2500});
+        // 콜라
+        음료디스펜서.get(0).음료재료.재료가격표셋팅(new int[]{450, 750, 1250, 1950}, new int[]{450, 750, 1250, 1950});
+        // 사이다
+        음료디스펜서.get(1).음료재료.재료가격표셋팅(new int[]{450, 750, 1250, 1950}, new int[]{450, 750, 1250, 1950});
+
+        // 레인지
+        for (int i = 0; i < 레인지개수; i++){
+            레인지들.get(i).장비가격표셋팅(new int[]{10, 7, 5}, new int[]{2000, 4000, 7000});
+        }
+        // 토핑대
+        for (int i = 0; i < 토핑재료이름들.length; i++){
+            토핑대들.get(i).장비가격표셋팅(new int[]{10, 7, 5}, new int[]{0, 3800, 6800});
+        }
+        // 음료디스펜서
+        for (int i = 0; i < 음료이름들.length; i++){
+            음료디스펜서.get(i).장비가격표셋팅(new int[]{10, 7, 5}, new int[]{0, 3700, 5700});
+        }
+
+    }
 //    public void 손님입장(){ // 스레드
     public void 손님입장(int 위치, ArrayList<String> 주문메뉴){ // 스레드
 //        int 위치 = 2;// 랜덤숫자
@@ -104,172 +138,16 @@ public class Game implements ActionListener {
         손님.주문하기(gameFrame, 주문메뉴, 위치); //// 위치
         픽업대들.get(위치).상태 = 1;
     }
-
-    //콘솔화면 출력///////////////////////////////////////////////////////
+    
     public void run스시자바(){
-        캐릭터셋팅(); // TODO : 처음 게임 실행 시 유저 이름 입력 받기
+//        게임유저셋팅(게임콘솔.게임유저등록());
+        게임유저셋팅("주연쓰");
         메뉴셋팅(); //
-        게임콘솔.메인화면출력(this);
+        가격셋팅();
+//        게임콘솔.재료업그레이드_화면출력(this);
+        게임콘솔.장비업그레이드_화면출력(this);
+//        게임콘솔.메인화면출력(this);
     }
-//    public void 메인화면출력(){
-//        String 대답;
-//        System.out.println("""
-//                    \n<메인화면>
-//                    1. 게임 시작
-//                    2. 나의 정보
-//                    3. 상점
-//                    4. 종료
-//                    """);
-//        System.out.println(": 숫자를 입력해주세요.");
-//        대답 = 숫자대답받기(1, 4);
-//        switch(대답){
-//            case "1":
-//                게임시작();
-//                break;
-//            case "2":
-//                나의정보출력();
-//                break;
-//            case "3":
-//                break;
-//            case "4":
-//                System.out.println("스시자바를 종료합니다.");
-//                System.exit(0);
-//                break;
-//        }//end switch
-//    }
-
-//    public void 나의정보출력(){
-//        String 대답;
-//        System.out.println("""
-//\n<나의 정보>
-//1. 유저 정보
-//2. 재료 정보
-//3. 장비 정보
-//4. 보유 아이템
-//5. 메인화면으로 돌아가기
-//                    """);
-//        System.out.println(": 숫자를 입력해주세요.");
-//        대답 = 숫자대답받기(1, 5);
-//        switch(대답){
-//            case "1":
-//                유저정보출력();
-//                break;
-//            case "2":
-//                재료정보출력();
-//                break;
-//            case "3":
-//                장비정보출력();
-//                break;
-//            case "4":
-//                보유아이템출력();
-//            case "5":
-//                게임콘솔.메인화면출력(this);
-//                break;
-//        }//end switch
-//    }
-//    public void 메인화면으로돌아가기(){
-//        System.out.println("\n1. 메인화면으로 돌아가기");
-//        String 대답 = 숫자대답받기(1, 1);
-//        if(대답.equals("1")) 게임콘솔.메인화면출력(this);
-//    }
-//    public void 유저정보출력(){
-//        System.out.println("\n<유저 정보>");
-//        System.out.println("이름 : " + 게임유저.이름);
-//        System.out.println("게임레벨 : " + 게임유저.게임레벨);
-//        System.out.println("보유코인수 : " + 게임유저.보유코인수);
-//        메인화면으로돌아가기();
-//    }
-//    public void 재료정보출력(){
-//        System.out.println("\n<재료 정보>");
-//        System.out.println("--베이스 재료----------------------");
-//        System.out.println("이름\t\t\t품질\t\t\t가격");
-//        System.out.println("---------------------------------");
-//        for (int i = 0; i < 베이스재료들.size(); i++){
-//            BaseIngredient 베이스재료 = 베이스재료들.get(i);
-//            System.out.println(베이스재료.이름 + "\t\t\t" +  베이스재료.품질  +"\t\t\t" + 베이스재료.가격);
-//        }
-//
-//        System.out.println("\n--토핑 재료----------------------");
-//        System.out.println("이름\t\t\t품질\t\t\t가격");
-//        System.out.println("--------------------------------");
-//        for (int i = 0; i < 토핑대들.size(); i++){
-//            ToppingIngredient 토핑재료 = 토핑대들.get(i).토핑재료;
-//            System.out.println(토핑재료.이름 + "\t\t\t" +  토핑재료.품질  +"\t\t\t" + 토핑재료.가격);
-//        }
-//
-//        System.out.println("\n--음료 재료----------------------");
-//        System.out.println("이름\t\t\t품질\t\t\t가격");
-//        System.out.println("--------------------------------");
-//        for (int i = 0; i < 음료디스펜서.size(); i++){
-//            BeverageIngredient 음료재료 = 음료디스펜서.get(i).음료재료;
-//            System.out.println(음료재료.이름 + "\t\t\t" +  음료재료.품질  +"\t\t\t" + 음료재료.가격);
-//        }
-//        메인화면으로돌아가기();
-//    }
-//
-//    public void 장비정보출력(){
-//        System.out.println("\n<장비 정보>");
-//        System.out.println("--화구--------------------------------");
-//        System.out.println("이름\t\t\t품질\t\t\t조리시간");
-//        System.out.println("-------------------------------------");
-//        for (int i = 0; i < 화구들.size(); i++){
-//            Range 화구 = 화구들.get(i);
-//            System.out.println(화구.이름 + "\t\t\t" +  화구.품질  +"\t\t\t" + 화구.조리시간);
-//        }
-//
-//        System.out.println();
-//        System.out.println("--토핑대------------------------------");
-//        System.out.println("이름\t\t\t품질\t\t\t토핑시간");
-//        System.out.println("-------------------------------------");
-//        for (int i = 0; i < 토핑대들.size(); i++){
-//            ToppigTable 토핑대 = 토핑대들.get(i);
-//            System.out.println(토핑대.이름 + "\t\t\t" +  토핑대.품질  +"\t\t\t" + 토핑대.조리시간);
-//        }
-//
-//        System.out.println();
-//        System.out.println("--음료디스펜서-------------------------");
-//        System.out.println("이름\t\t\t품질\t\t\t시간");
-//        System.out.println("-------------------------------------");
-//        for (int i = 0; i < 음료디스펜서.size(); i++){
-//            Dispensor 디스펜서 = 음료디스펜서.get(i);
-//            System.out.println(디스펜서.이름 + "\t\t\t" +  디스펜서.품질  +"\t\t\t" + 디스펜서.조리시간);
-//        }
-//        메인화면으로돌아가기();
-//    }
-//    public void 보유아이템출력(){
-//
-//        메인화면으로돌아가기();
-//    }
-//
-//
-//
-//    public void 일시정지화면(){
-//        this.일시정지 = true;
-//        gameFrame.프레임.setVisible(false);
-//            System.out.println("""
-//                    \n<일시정지>
-//                    1. 게임 재개
-//                    2. 다시 하기
-//                    3. 게임 종료
-//                    """);
-//            System.out.println(": 숫자를 입력해주세요.");
-//            대답 = 숫자대답받기(1, 3);
-//            switch(Integer.parseInt(대답)){
-//                case 1:
-//                    gameFrame.프레임.setVisible(true);
-//                    this.일시정지 = false;
-//                    break;
-//                case 2:
-//                    게임시작();
-//                    this.일시정지 = false;
-//                    break;
-//                case 3:
-//                    System.out.println("게임을 종료합니다.");
-//                    게임콘솔.메인화면출력(this);
-//                    break;
-//            }
-//    }
-    //end 콘솔화면 출력///////////////////////////////////////////////////////
 
 
     public void 게임시작(){ // 스레드
@@ -324,21 +202,21 @@ public class Game implements ActionListener {
             }
         }
 
-        for (int i = 0; i < gameFrame.화구들.length; i++){
-            if(!e.getSource().equals(gameFrame.화구들[i])) continue;
-            if(화구들.get(i).상태==0 && 클릭된메뉴 instanceof Food && ((Food) 클릭된메뉴).조리상태==1){ ////
-                화구들.get(i).조리하기((Food)클릭된메뉴);
+        for (int i = 0; i < gameFrame.레인지들.length; i++){
+            if(!e.getSource().equals(gameFrame.레인지들[i])) continue;
+            if(레인지들.get(i).상태==0 && 클릭된메뉴 instanceof Food && ((Food) 클릭된메뉴).조리상태==1){ ////
+                레인지들.get(i).조리하기((Food)클릭된메뉴);
                 클릭된메뉴초기화();
 //                 조리완료 htmlText - 아직 스레드 기능이 없어 일단 조리완료로 바로 변경
-                gameFrame.set조리완료(화구들.get(i).조리음식.이름, i);
-                // 화구버튼 비활성화
-//                gameFrame.화구들[i].setEnabled(false);
-            }else if(클릭된메뉴==null && 화구들.get(i).상태 > 2){
-                클릭된메뉴저장(화구들.get(i).조리음식);
-                화구들.get(i).조리음식초기화();
-                gameFrame.init화구(i);
-                // 화구버튼 활성화
-//                gameFrame.화구들[i].setEnabled(true);
+                gameFrame.set조리완료(레인지들.get(i).조리음식.이름, i);
+                // 레인지버튼 비활성화
+//                gameFrame.레인지들[i].setEnabled(false);
+            }else if(클릭된메뉴==null && 레인지들.get(i).상태 > 2){
+                클릭된메뉴저장(레인지들.get(i).조리음식);
+                레인지들.get(i).조리음식초기화();
+                gameFrame.init레인지(i);
+                // 레인지버튼 활성화
+//                gameFrame.레인지들[i].setEnabled(true);
             }
         }
 
