@@ -1,10 +1,14 @@
+import java.util.HashMap;
+
 public class GameUser { // 게임 유저
     String  이름;
     int 생성날짜;
 //    int 게임점수; // 매출액 누적 - 유저정보 저장기능 사용한다면 게임점수 저장시키기
     int 보유코인수;
     int 게임레벨; // 유저에 저장? 게임 관리하는 클래스에 저장?
-    String[] 보유아이템;
+//    String[] 보유아이템;
+//    HashMap<GameItem, Integer> 보유아이템;
+    // {아이템객체1: 2}, {아이템객체1: 3개 } ...
     public GameUser(){}
 
     public void 캐릭터초기화(){
@@ -36,6 +40,10 @@ public class GameUser { // 게임 유저
 //    }
 
     public void 음식버리기(){Game.음식버린횟수 += 1;}
+
+
+    public void 상점이용하기(){}
+
 }
 
 

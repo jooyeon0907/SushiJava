@@ -1,10 +1,11 @@
-public class ToppigTable extends KitchenEquipment {
+public class ToppingTable extends KitchenEquipment {
     ToppingIngredient 토핑재료;
 
-    public ToppigTable(String 이름) {
+    public ToppingTable(){}
+    public ToppingTable(String 이름) {
         super(이름);
     }
-    public ToppigTable(String 이름, ToppingIngredient 토핑재료) {
+    public ToppingTable(String 이름, ToppingIngredient 토핑재료) {
         super(이름);
         this.토핑재료 = 토핑재료;
     }

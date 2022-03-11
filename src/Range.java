@@ -1,6 +1,7 @@
 public class Range extends KitchenEquipment{
 //    BaseIngredient 베이스재료; // 레인지위에 조리 중인 베이스재료
 
+    public Range() {super();}
     public Range(String 이름) {super(이름);}
     public Range(String 이름, int 품질) {
         super(이름);

@@ -60,13 +60,17 @@ public class GameFrame implements ActionListener {
        음료들[위치].setText(태그포맷팅("html", p태그들));
     }
 
-
+    public void set아이템개수(int 개수, int 위치){
+        게임아이템들[위치].setText(Game.게임아이템이름들[위치]+" ("+개수+"개)");
+    }
 
     public void set현재매출(int 결제금액){현재매출값.setText(String.valueOf(결제금액));}
     public void set클릭된메뉴(String 이름){클릭된메뉴.setText(이름);}
     public void init클릭된메뉴(){클릭된메뉴.setText("");}
 
-    public void 픽업대주문메뉴받기(int 위치, String 주문메뉴){주문메뉴들[위치].setText(주문메뉴);}
+    public void 픽업대주문메뉴받기(int 위치, String 주문메뉴){
+        System.out.println("위치 : " + 위치+", 주문메뉴 : " + 주문메뉴);
+        주문메뉴들[위치].setText(주문메뉴);}
     public void 픽업대주문완료(int 결제금액, int 위치){
         주문메뉴들[위치].setText(Integer.toString(결제금액));
         손님수값.setText(String.valueOf(Game.손님수));
@@ -82,18 +86,10 @@ public class GameFrame implements ActionListener {
         주문메뉴들[위치].setText(주문메뉴); // 위치 변경
         주문시간들[위치].setText(String.valueOf(기다리는시간)); //  위치 변경
     }
+    public void init기다리는시간(int 위치, int 기다리는시간){주문시간들[위치].setText(String.valueOf(기다리는시간));}
 
     //end setText/////////////////////////////////////////////////////////////
 
-
-
-
-
-    JButton btn1 = new JButton("1번 버튼");
-    JButton btn2 = new JButton("2번 버튼");
-    JButton btn3 = new JButton("3번 버튼");
-    JButton btn4 = new JButton("4번 버튼");
-    JButton btn5 = new JButton("5번 버튼");
 
     JFrame 프레임 = new JFrame();
     JPanel 베이스패널;
@@ -111,6 +107,8 @@ public class GameFrame implements ActionListener {
     JPanel 픽업대패널;
         JButton[] 주문메뉴들;
     JPanel 키친패널;
+        JPanel 게임아이템패널;
+            JButton[] 게임아이템들;
         JPanel 음료패널;
             JButton[] 음료들;
         JPanel 레인지패널;
@@ -146,6 +144,10 @@ public class GameFrame implements ActionListener {
             for (int i = 0; i < Game.픽업대개수; i++) 주문메뉴들[i] = new JButton("주문&픽업대");
 
         키친패널 = new JPanel();
+            게임아이템패널 = new JPanel();
+                게임아이템들 = new JButton[Game.게임아이템이름들.length];
+                for (int i = 0; i < Game.게임아이템이름들.length; i++) 게임아이템들[i] = new JButton(Game.게임아이템이름들[i]);
+
             음료패널 = new JPanel();
                 음료들 = new JButton[Game.음료이름들.length];
                 for (int i = 0; i < Game.음료이름들.length; i++) 음료들[i] = new JButton(Game.음료이름들[i]);
@@ -208,8 +210,6 @@ public class GameFrame implements ActionListener {
         손님들패널.setLayout(new GridLayout(2,1));
         for(int i=0; i<손님들.length; i++){
             손님들패널.add(주문시간들[i]);
-//            손님들패널.add(주문메뉴들[i]);
-//            손님들패널.add(손님들[i]);
         }
         for(int i=0; i<손님들.length; i++){
             손님들패널.add(손님들[i]);
@@ -223,12 +223,18 @@ public class GameFrame implements ActionListener {
             픽업대패널.add(주문메뉴들[i]);
         }
 
-
         y+=h; h=200;
         베이스패널.add(키친패널);
         키친패널.setBounds(0, y, 1000, h);
         키친패널.setBorder(BorderFactory.createEmptyBorder(10 , 10 , 10 , 20));
         키친패널.setLayout(new GridLayout());
+
+        키친패널.add(게임아이템패널);
+        게임아이템패널.setBorder(BorderFactory.createEmptyBorder(0 , 0 , 10 , 10));
+        게임아이템패널.setLayout(new GridLayout(4,1));
+        for(int i=0; i<게임아이템들.length; i++){
+            게임아이템패널.add(게임아이템들[i]);
+        }
 
         키친패널.add(음료패널);
         음료패널.setBorder(BorderFactory.createEmptyBorder(0 , 0 , 10 , 10));
@@ -268,16 +274,18 @@ public class GameFrame implements ActionListener {
         하단패널.add(쓰레기통);
 
 
-//        Container container = 프레임.getContentPane();
-//        container.add(btn1, BorderLayout.NORTH);
-//        container.add(btn2, BorderLayout.EAST);
-//        container.add(btn3, BorderLayout.WEST);
-//        container.add(btn4, BorderLayout.SOUTH);
-//        container.add(btn5, BorderLayout.CENTER);
-
-
     }
 
+    public void 버튼리스너등록(Game game) {// addActionListener
+        for(int i=0; i<주문메뉴들.length; i++) 주문메뉴들[i].addActionListener(game);
+        for(int i=0; i<음료들.length; i++)음료들[i].addActionListener(game);
+        for(int i=0; i<레인지들.length; i++)레인지들[i].addActionListener(game);
+        for(int i=0; i<토핑재료들.length; i++)토핑재료들[i].addActionListener(game);
+        for(int i=0; i<베이스재료들.length; i++)베이스재료들[i].addActionListener(game);
+        for(int i=0; i<게임아이템들.length; i++)게임아이템들[i].addActionListener(game);
+        일시정지.addActionListener(game);
+        쓰레기통.addActionListener(game);
+    }
 
 
     @Override

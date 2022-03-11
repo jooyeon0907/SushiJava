@@ -14,6 +14,7 @@ public class KitchenIngredient extends Kitchen {
 
     public void 재료가격셋팅(){this.가격 = (int) this.가격표.get(this.품질-1).get("재료가격");}
     public boolean 재료업그레이드(GameUser 게임유저){
+    // TODO : 재료업그레이드 후 메뉴가격표도 없그레이드 해주기.
     // 상점 입장 -> 재료 업그레이드 -> 연어재료 업그레이드/장어 재료 업그레이드/.. -> 코인 지불하고 해당 메소드 실행하여 품질 값 올리기
     // 업그레이드 할 수 있는지 코인수 체크
         int 업그레이드가격 = (int)this.가격표.get(this.품질).get("업그레이드가격");

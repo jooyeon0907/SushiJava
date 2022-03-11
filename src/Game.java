@@ -1,11 +1,11 @@
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 public class Game implements ActionListener {
+    static int 게임레벨;
+    //// 게임 한판 할 때 필요한 변수
     static int 손님수;
     static int 손님만족횟수;
     static int 음식버린횟수;
@@ -15,44 +15,39 @@ public class Game implements ActionListener {
     Boolean 일시정지;
     Menu 클릭된메뉴;
 
+
     static String[] 베이스재료이름들 = {"쌀", "면"};
     static String[] 토핑재료이름들 = {"연어", "장어", "한우", "참치"};
     static String[] 음료이름들 = {"콜라", "사이다"};
+    static String[] 게임아이템이름들 = {"시간정지", "캔디", "만능요리", "초특급요리"};
     static int 레인지개수 = 2;
     static int 픽업대개수 = 4;
     static int 재료최고품질 = 4;
     static int 장비최고품질 = 3;
+    static HashMap<String, Integer> 메뉴가격표;
+    ArrayList<Customer> 손님유형들;
 
 
-    GameFrame gameFrame;
+    static GameFrame gameFrame; // TODO : 전역변수로 수정함 -> 맞게 바꾸기 (GameFrame gameFrame 쓴 곳 찾아서 전역변수로 불러오기)
 
     GameUser 게임유저;
 
     ArrayList<BaseIngredient> 베이스재료들;
-    ArrayList<ToppingIngredient> 토핑재료들;
-    ArrayList<BeverageIngredient> 음료들;
+//    ArrayList<ToppingIngredient> 토핑재료들;
+//    ArrayList<BeverageIngredient> 음료들;
     ArrayList<Range> 레인지들;
     ArrayList<Dispensor> 음료디스펜서;
-    ArrayList<ToppigTable> 토핑대들;
+    ArrayList<ToppingTable> 토핑대들;
     ArrayList<Pickup> 픽업대들;
+    ArrayList<GameItem> 게임아이템들;
 
-    GameConsole 게임콘솔 = new GameConsole();
+    GameConsole 게임콘솔 = new GameConsole(this);
 
     Scanner 스캐너 = new Scanner(System.in);
     String 대답;
 
-    public void 버튼리스너등록() {
-        gameFrame = new GameFrame();
 
-        // addActionListener
-        for(int i=0; i<gameFrame.주문메뉴들.length; i++) gameFrame.주문메뉴들[i].addActionListener(this);
-        for(int i=0; i<gameFrame.음료들.length; i++)gameFrame.음료들[i].addActionListener(this);
-        for(int i=0; i<gameFrame.레인지들.length; i++)gameFrame.레인지들[i].addActionListener(this);
-        for(int i=0; i<gameFrame.토핑재료들.length; i++)gameFrame.토핑재료들[i].addActionListener(this);
-        for(int i=0; i<gameFrame.베이스재료들.length; i++)gameFrame.베이스재료들[i].addActionListener(this);
-        gameFrame.일시정지.addActionListener(this);
-        gameFrame.쓰레기통.addActionListener(this);
-    }
+
 
     public void 게임유저셋팅(String 유저이름){
         게임유저 = new GameUser();
@@ -63,10 +58,26 @@ public class Game implements ActionListener {
         System.out.println(유저이름 + "님이 등록되었습니다.");
     }
 
-    public void 아이템셋팅(){}
+    public void 손님유형셋팅(){
+        손님유형들 = new ArrayList<>();
+//        손님유형들.add()
+    }
 
-    public void 메뉴셋팅(){  //// 가격 셋팅하는 부분을 따로 만들어야될듯
-        // for문 사용이유 : 추후 추가되는 아이템이 있다면 이름들 리스트에 이름만 추가하면 for 문을 돌면서 자동으로 추가되도록 함 
+    public void 아이템셋팅(){ //  {"시간정지", "캔디", "만능요리", "초특급요리"};
+        게임아이템들 = new ArrayList<GameItem>();
+        게임아이템들.add(new TimeStopItem(게임아이템이름들[0], 700));
+        게임아이템들.add(new CandyItem(게임아이템이름들[1], 600));
+        게임아이템들.add(new AllPurposeItem(게임아이템이름들[2], 1000));
+        게임아이템들.add(new SuperSpecialItem(게임아이템이름들[3], 1400));
+        for (int i = 0; i < 게임아이템들.size(); i++){
+            gameFrame.set아이템개수(게임아이템들.get(i).개수, i);
+            gameFrame.게임아이템들[i].setEnabled(true);
+        }
+    }
+
+
+    public void 메뉴셋팅(){  //// 가격 셋팅하는 부분을 따로 만들어야될듯   // 메뉴셋팅 -> 버튼셋팅 ?
+        // for문 사용이유 : 추후 추가되는 아이템이 있다면 이름들 리스트에 이름만 추가하면 for 문을 돌면서 자동으로 추가되도록 함
         베이스재료들 = new ArrayList<BaseIngredient>();
         for (int i = 0; i < 베이스재료이름들.length; i++){
             베이스재료들.add(new BaseIngredient(베이스재료이름들[i]));
@@ -84,13 +95,15 @@ public class Game implements ActionListener {
             음료디스펜서.add(new Dispensor(음료이름들[i]+"디스펜서", new BeverageIngredient(음료이름들[i])));
         }
 
-        토핑대들 = new ArrayList<ToppigTable>();
+        // TODO : 게임레벨에 따라 토핑재료 이름들 개수 제한 시키기
+        토핑대들 = new ArrayList<ToppingTable>();
         for (int i = 0; i < 토핑재료이름들.length; i++){
-            토핑대들.add(new ToppigTable(토핑재료이름들[i]+"토핑대", new ToppingIngredient(토핑재료이름들[i])));
+            토핑대들.add(new ToppingTable(토핑재료이름들[i]+"토핑대", new ToppingIngredient(토핑재료이름들[i])));
         }
         // 매장 셋팅
         픽업대들 = new ArrayList<Pickup>();
         for (int i = 0; i < 픽업대개수; i++) 픽업대들.add(new Pickup());
+
     }
 
     public void 가격셋팅(){
@@ -125,6 +138,48 @@ public class Game implements ActionListener {
         }
 
     }
+
+
+    public void 메뉴가격표셋팅(){
+        // TODO: 재료 업그레이드 시 메뉴가격표도 업데이트해줘야함
+        // TODO : 게임레벨에 따라 토핑재료 이름들 개수 제한 시키기
+
+        메뉴가격표 = new HashMap<>();
+
+        // 베이스재료만
+        for (int i = 0; i < 베이스재료들.size(); i++){
+            String 메뉴이름 = 베이스재료들.get(i).조리된이름();
+            int 메뉴가격 = 베이스재료들.get(i).가격;
+            메뉴가격표.put(메뉴이름, 메뉴가격);
+        }
+        // 베이스재료+ 토핑재료
+        for (int i = 0; i < 베이스재료들.size(); i++){
+          for (int j = 0; j < 토핑대들.size(); j++) {
+              String 메뉴이름 = 토핑대들.get(j).토핑재료.이름 + 베이스재료들.get(i).조리된이름();
+              int 메뉴가격 = 토핑대들.get(j).토핑재료.가격 + 베이스재료들.get(i).가격;
+              메뉴가격표.put(메뉴이름, 메뉴가격);
+          }
+        }
+        // 음료
+        for (int i = 0; i < 음료디스펜서.size(); i++){
+            String 메뉴이름 = 음료디스펜서.get(i).음료재료.이름;
+            int 메뉴가격 = 음료디스펜서.get(i).음료재료.가격;
+            메뉴가격표.put(메뉴이름, 메뉴가격);
+        }
+
+        System.out.println(메뉴가격표);
+        // 메뉴 이름을 키로 이용하여 메뉴 가격 가져오기
+        System.out.println(메뉴가격표.get("연어초밥"));
+//        Set<String> keySet = 메뉴가격표.keySet();
+//        for(String key: keySet){
+//            System.out.println(key  + ", " + 메뉴가격표.get(key));
+//        }
+
+
+    }
+
+
+
 //    public void 손님입장(){ // 스레드
     public void 손님입장(int 위치, ArrayList<String> 주문메뉴){ // 스레드
 //        int 위치 = 2;// 랜덤숫자
@@ -140,28 +195,40 @@ public class Game implements ActionListener {
     }
     
     public void run스시자바(){
+        gameFrame = new GameFrame();
+        gameFrame.버튼리스너등록(this);
 //        게임유저셋팅(게임콘솔.게임유저등록());
         게임유저셋팅("주연쓰");
+        아이템셋팅();
         메뉴셋팅(); //
         가격셋팅();
-//        게임콘솔.재료업그레이드_화면출력(this);
-        게임콘솔.장비업그레이드_화면출력(this);
-//        게임콘솔.메인화면출력(this);
+        메뉴가격표셋팅();
+//        게임콘솔.재료업그레이드_화면출력();
+//        게임콘솔.장비업그레이드_화면출력();
+        게임콘솔.메인화면출력();
+//        게임시작();
+    }
+
+    public void 아이템장착(){
+        // 게임유저.보유아이템
+        // 부스터 아이템
+            //
+        System.out.println("부스터 기능 뺄까... ");
     }
 
 
     public void 게임시작(){ // 스레드
-        버튼리스너등록();
         클릭된메뉴 = null;
         gameFrame.프레임.setVisible(true); // 프레임 보이기 설정
 
         // 난이도 셋팅
 
-
         // 스레드 사용할건데 우선 테스트값으로 손님 2명 배치
+
+
         int 위치 = 2;
         // 랜덤으로 주문메뉴 리스트 생성 - 게임 레벨, 캐릭터 유형에 따라 달라짐
-        ArrayList<String> 주문메뉴 = new ArrayList<String>(
+        ArrayList<String> 주문메뉴 = new ArrayList<String>( // 랜덤으로 값 넣은거임 -> 주문하기에서 주문메뉴가 정해짐
         Arrays.asList("연어초밥", "장어초밥", "한우라멘"));
         손님입장(위치, 주문메뉴);
 
@@ -191,6 +258,7 @@ public class Game implements ActionListener {
     }
 
 
+
     @Override
     public void actionPerformed(ActionEvent e) {
         for(int i=0; i<gameFrame.베이스재료들.length; i++){
@@ -198,7 +266,8 @@ public class Game implements ActionListener {
             if(e.getSource().equals(gameFrame.베이스재료들[i])){
                 String 베이스재료이름 = gameFrame.베이스재료들[i].getText();
                 int 베이스재료가격 = 베이스재료들.get(i).가격;
-                클릭된메뉴저장(new Food(베이스재료이름, 1, 베이스재료가격));
+//                클릭된메뉴저장(new Food(베이스재료이름, 1, 베이스재료가격));
+                클릭된메뉴저장(new Food(베이스재료이름, 1));
             }
         }
 
@@ -261,14 +330,21 @@ public class Game implements ActionListener {
             if(!e.getSource().equals(gameFrame.주문메뉴들[i])) continue;
             if(픽업대들.get(i).상태==0) break;
             Pickup 픽업대 = 픽업대들.get(i);
-            if(클릭된메뉴 != null && 픽업대.상태==1 &&  ////// 픽업대 주문중 상태이고 클릭된 메뉴가 음료이거나 조리된 음식일 때
-                (클릭된메뉴 instanceof Food && ((Food)클릭된메뉴).조리상태 > 1) || 클릭된메뉴 instanceof Beverage){
-                Boolean 음식받기 = 픽업대.음식받기(gameFrame, 클릭된메뉴);  // 서빙한 음식이 현재 픽업대 주문메뉴에 해당하는지 체크
+//            if(클릭된메뉴 != null && 픽업대.상태==1 &&  ////// 픽업대 주문중 상태이고 클릭된 메뉴가 음료이거나 조리된 음식일 때
+//                (클릭된메뉴 instanceof Food && ((Food)클릭된메뉴).조리상태 > 1) || 클릭된메뉴 instanceof Beverage){
+           if(클릭된메뉴 != null && 픽업대.상태==1){ // TODO
+//               if(클릭된메뉴 instanceof Food && ((Food)클릭된메뉴).조리상태 < 2) continue;
+               Boolean 음식받기 = 픽업대.음식받기(gameFrame, 클릭된메뉴);  // 서빙한 음식이 현재 픽업대 주문메뉴에 해당하는지 체크
                 if(음식받기) {
                     gameFrame.픽업대주문메뉴받기(i, String.valueOf(픽업대.손님.주문메뉴));
-                    클릭된메뉴초기화();
                     // 주문메뉴 모두 서빙했다면
                     if(픽업대.손님.주문메뉴.size()< 1) 픽업대.주문완료(gameFrame);
+                    if(클릭된메뉴.이름.equals("만능요리")){ // TODO : 버튼 원래색을 되돌리기 -> 코드 위치 수정
+                        for (int j = 0; j < gameFrame.주문메뉴들.length; j++){
+                            gameFrame.주문메뉴들[j].setBackground(new Color(238, 238, 238)); // TODO : 기본 색상으로 어떻게 되돌리지?
+                        }
+                    }
+                    클릭된메뉴초기화();
                 }
             }else if(픽업대.상태==2){
                 게임유저.코인회수하기(gameFrame, 픽업대);
@@ -276,7 +352,46 @@ public class Game implements ActionListener {
             }
         }
 
-        if(e.getSource().equals(gameFrame.일시정지)) 게임콘솔.일시정지(this);
+        for (int i = 0; i < gameFrame.게임아이템들.length; i++){ // TODO: 아이템버튼들 비활성화 -> 아이템 사용완료시 다시 활성화
+            if(!e.getSource().equals(gameFrame.게임아이템들[i])) continue;
+            GameItem 게임아이템 = 게임아이템들.get(i);
+            if(게임아이템.이름.equals("만능요리")){
+                클릭된메뉴저장(((AllPurposeItem)게임아이템).만능메뉴);
+//                게임아이템.아이템사용();
+                // 픽업대 버튼 클릭 유도하도록 눈에 띄게 색깔 바꾸기
+                for (int j = 0; j < gameFrame.주문메뉴들.length; j++){
+                    gameFrame.주문메뉴들[j].setBackground(Color.blue);
+                }
+                // 키친패널 버튼 비활성화
+//                for (int 키친패널위치 =0; 키친패널위치 < gameFrame.키친패널.getComponentCount(); 키친패널위치++){
+//                    JPanel 패널 = (JPanel) gameFrame.키친패널.getComponent(키친패널위치);
+//                    for (int 패널위치 = 0; 패널위치 < 패널.getComponentCount(); 패널위치++){
+//                        패널.getComponent(패널위치).setEnabled(false);
+//                    }
+//                }
+            }else if(게임아이템.이름.equals("초특급요리")){ // TODO : 수정 -> 마지막 픽업대도 수정이되네
+               for (int 픽업대위치= 0; 픽업대위치 < 픽업대들.size(); 픽업대위치++){
+                   Pickup 픽업대 = 픽업대들.get(픽업대위치);
+                   if(픽업대.상태 ==1 ) {
+                       클릭된메뉴저장(((SuperSpecialItem)게임아이템).만능메뉴);
+                       Boolean 음식받기 = 픽업대.음식받기(gameFrame, 클릭된메뉴);  // 서빙한 음식이 현재 픽업대 주문메뉴에 해당하는지 체크
+                       if (음식받기) {
+                           gameFrame.픽업대주문메뉴받기(픽업대.위치, String.valueOf(픽업대.손님.주문메뉴));
+                           if (픽업대.손님.주문메뉴.size() < 1) 픽업대.주문완료(gameFrame);
+                       }
+                       클릭된메뉴초기화();
+                   }
+               }
+            }else if(게임아이템.이름.equals("캔디")){
+                클릭된메뉴저장(((CandyItem)게임아이템).캔디);
+            } else{
+                게임아이템.아이템사용();
+            }
+            gameFrame.set아이템개수(게임아이템.개수, i);
+            if(게임아이템.개수 < 1 ) gameFrame.게임아이템들[i].setEnabled(false);
+        }
+
+        if(e.getSource().equals(gameFrame.일시정지)) 게임콘솔.일시정지();
         else if(e.getSource().equals(gameFrame.쓰레기통)){
             if(클릭된메뉴!=null){ // 음식 버리기
                 System.out.println("쓰레기통에 " + 클릭된메뉴.이름 + " 버리기");
