@@ -1,48 +1,37 @@
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class GameUser { // 게임 유저
     String  이름;
-    int 생성날짜;
-//    int 게임점수; // 매출액 누적 - 유저정보 저장기능 사용한다면 게임점수 저장시키기
     int 보유코인수;
-    int 게임레벨; // 유저에 저장? 게임 관리하는 클래스에 저장?
-//    String[] 보유아이템;
-//    HashMap<GameItem, Integer> 보유아이템;
-    // {아이템객체1: 2}, {아이템객체1: 3개 } ...
-    public GameUser(){}
+    ArrayList<GameItem> 게임아이템들;
 
-    public void 캐릭터초기화(){
-
+    public GameUser(String 이름, int 보유코인수) {
+        this.이름 = 이름;
+        this.보유코인수 = 보유코인수;
+        this.게임아이템들 = new ArrayList<>();
     }
-    public void 이름설정하기(){}
-    public void 코인회수하기(GameFrame gameFrame, Pickup 픽업대){
+
+    public void 코인회수하기(Pickup 픽업대){
+        // TODO 위치 check : 회수한 코인은 게임유저의 보유코인수에 저장되는게 아니라 게임 변수에 추가되는 건데.. 그럼 게임 클래스에서 배치하는게 자연스러울려나 ?
         System.out.println(픽업대.결제금액  +"코인을 회수합니다.");
         Game.현재매출 += 픽업대.결제금액;
         픽업대.상태 = 0;
         픽업대.결제금액 = 0;
-
+        Game.gameFrame.코인회수하기(픽업대.위치);
         /// 현재매출 목표매출 비교
     }
 
-//    public void 음식서빙하기(Pickup 픽업대, Food 서빙메뉴){ // 픽업대에 배치?
-//        // 서빙한 음식이 현재 픽업대 주문메뉴에 해당하는지 체크
-//        if(픽업대.주문메뉴들.contains(서빙메뉴.이름)){
-//            System.out.println(서빙메뉴 + " 서빙 완료하였습니다.");
-//            픽업대.결제금액 += 서빙메뉴.가격;
-//            픽업대.주문메뉴들.remove(서빙메뉴.이름);
-//            //// 서빙메뉴 객체는 언제 사라지는지 체크하기
-//        }
-//        if(픽업대.주문메뉴들.size() < 1){
-//            // 서빙 완료했으면 계산하기  //// 위치 고려해보기
-//            Boolean 계산완료됨 = 픽업대.손님.계산하기();
-//            if(계산완료됨) 픽업대.계산완료됨();
-//        }
-//    }
-
-    public void 음식버리기(){Game.음식버린횟수 += 1;}
-
-
-    public void 상점이용하기(){}
+    public void 음식버리기(Menu 메뉴, boolean 게임미션_음식버리지않기){
+        // TODO 위치 check : 유저에서 관리할지 게임에서 관리할지 ->
+        //  '유저가 음식을 버린다' 로만 생각했을 때는 유저클래스에 배치를 해야할거 같지만 막상 메소드 안의 로직을 보면 게임 클래스에 관련된 내용임
+//        if(게임미션_음식버리지않기) System.out.println("게임실패하고 종료 "); // TODO : 쓰레드 할 때 기능추가
+        System.out.println("쓰레기통에 " + 메뉴.이름 + " 버리기");
+        Game.음식버린횟수 += 1; ///  TODO : 음식버린횟수 >1 되면 게임미션.음식버리지않기 = true 로 변경하거나 어떠한 처리하기
+        Game.현재매출 -= 메뉴.가격;
+        System.out.println("Game.현재매출: " +Game.현재매출);
+        System.out.println("메뉴.가격: " +메뉴.가격);
+        Game.gameFrame.set현재매출(Game.현재매출);
+    }
 
 }
 

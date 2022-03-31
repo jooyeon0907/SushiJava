@@ -7,6 +7,11 @@ import java.util.GregorianCalendar;
 
 
 public class GameFrame implements ActionListener {
+    Game 게임;
+
+
+    Color 베이스컬러 = new Color(235,253,255);
+    Color 만능요리컬러 = new Color(124, 181, 224);
     //setText///////////////////////////////////////////////////////////////
     public String 태그포맷팅(String 태그, String[] 값들){
         StringBuffer sb = new StringBuffer();
@@ -39,7 +44,7 @@ public class GameFrame implements ActionListener {
         레인지들[위치].setText(태그포맷팅("html", p태그들));
     }
 
-    public void init토핑대(int 위치){토핑재료들[위치].setText(Game.토핑재료이름들[위치]);}
+    public void init토핑대(int 위치){토핑재료들[위치].setText(게임.토핑재료이름들[위치]);}
     public void set토핑중(String 이름, int 위치, int 토핑시간){
         String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "토핑중", String.valueOf(토핑시간)});
         토핑재료들[위치].setText(태그포맷팅("html", p태그들));
@@ -50,7 +55,7 @@ public class GameFrame implements ActionListener {
     }
 
 
-    public void init음료디스펜스(int 위치){음료들[위치].setText(Game.음료이름들[위치]);}
+    public void init음료디스펜스(int 위치){음료들[위치].setText(게임.음료이름들[위치]);}
     public void set음료따르는중(String 이름, int 위치, int 음료따르는시간){
         String[] p태그들 = 여러개태그포맷팅(p센터, new String[]{이름, "음료따르는중", String.valueOf(음료따르는시간)});
         음료들[위치].setText(태그포맷팅("html", p태그들));
@@ -61,16 +66,16 @@ public class GameFrame implements ActionListener {
     }
 
     public void set아이템개수(int 개수, int 위치){
-        게임아이템들[위치].setText(Game.게임아이템이름들[위치]+" ("+개수+"개)");
+        게임아이템들[위치].setText(게임.게임아이템이름들[위치]+" ("+개수+"개)");
     }
 
     public void set현재매출(int 결제금액){현재매출값.setText(String.valueOf(결제금액));}
+    public void set목표매출(int 목표매출){목표매출값.setText(String.valueOf("/ "  +목표매출));}
+
     public void set클릭된메뉴(String 이름){클릭된메뉴.setText(이름);}
     public void init클릭된메뉴(){클릭된메뉴.setText("");}
 
-    public void 픽업대주문메뉴받기(int 위치, String 주문메뉴){
-        System.out.println("위치 : " + 위치+", 주문메뉴 : " + 주문메뉴);
-        주문메뉴들[위치].setText(주문메뉴);}
+    public void 픽업대주문메뉴받기(int 위치, String 주문메뉴){주문메뉴들[위치].setText(주문메뉴);}
     public void 픽업대주문완료(int 결제금액, int 위치){
         주문메뉴들[위치].setText(Integer.toString(결제금액));
         손님수값.setText(String.valueOf(Game.손님수));
@@ -121,48 +126,51 @@ public class GameFrame implements ActionListener {
         JButton 일시정지;
         JButton 쓰레기통;
         
-    public GameFrame(){
+//    public GameFrame(){
+    public GameFrame(Game 게임){
+        this.게임 = 게임;
+
         프레임 = new JFrame();
         베이스패널 = new JPanel();
 
         정보패널 = new JPanel();
             타이머 = new JLabel("타이머: "); 타이머값 = new JLabel("2분 20초");
-            목표매출 = new JLabel("달성 매출 / 목표 매출: ");
+            목표매출 = new JLabel("현재 매출 / 목표 매출: ");
             매출패널 = new JPanel();
-                현재매출값 = new JLabel("0"); 목표매출값 = new JLabel("/ 30000");
+                현재매출값 = new JLabel("0"); 목표매출값 = new JLabel("/ 0");
             손님수 = new JLabel("손님수: "); 손님수값 = new JLabel("0");
             클릭된메뉴이름 = new JLabel("클릭된 메뉴: "); 클릭된메뉴 = new JLabel("");
 
         손님들패널 = new JPanel();
-            주문시간들 = new JLabel[Game.픽업대개수];
-            for (int i = 0; i < Game.픽업대개수; i++) 주문시간들[i] = new JLabel("주문시간", JLabel.CENTER);
-            손님들 = new JLabel[Game.픽업대개수];
-            for (int i = 0; i < Game.픽업대개수; i++) 손님들[i] = new JLabel("손님"+(i+1), JLabel.CENTER);
+            주문시간들 = new JLabel[게임.픽업대개수];
+            for (int i = 0; i < 게임.픽업대개수; i++) 주문시간들[i] = new JLabel("기다리는 시간", JLabel.CENTER);
+            손님들 = new JLabel[게임.픽업대개수];
+            for (int i = 0; i < 게임.픽업대개수; i++) 손님들[i] = new JLabel("손님"+(i+1), JLabel.CENTER);
 
         픽업대패널 = new JPanel();
-            주문메뉴들 = new JButton[Game.픽업대개수];
-            for (int i = 0; i < Game.픽업대개수; i++) 주문메뉴들[i] = new JButton("주문&픽업대");
+            주문메뉴들 = new JButton[게임.픽업대개수];
+            for (int i = 0; i < 게임.픽업대개수; i++) 주문메뉴들[i] = new JButton("주문&픽업대");
 
         키친패널 = new JPanel();
             게임아이템패널 = new JPanel();
-                게임아이템들 = new JButton[Game.게임아이템이름들.length];
-                for (int i = 0; i < Game.게임아이템이름들.length; i++) 게임아이템들[i] = new JButton(Game.게임아이템이름들[i]);
+                게임아이템들 = new JButton[게임.게임아이템이름들.length];
+                for (int i = 0; i < 게임.게임아이템이름들.length; i++) 게임아이템들[i] = new JButton(게임.게임아이템이름들[i]);
 
             음료패널 = new JPanel();
-                음료들 = new JButton[Game.음료이름들.length];
-                for (int i = 0; i < Game.음료이름들.length; i++) 음료들[i] = new JButton(Game.음료이름들[i]);
+                음료들 = new JButton[게임.음료이름들.length];
+                for (int i = 0; i < 게임.음료이름들.length; i++) 음료들[i] = new JButton(게임.음료이름들[i]);
 
             레인지패널 = new JPanel();
-                레인지들 = new JButton[Game.레인지개수];
-                for (int i = 0; i < Game.레인지개수; i++) 레인지들[i] = new JButton("레인지"+(i+1));
+                레인지들 = new JButton[게임.레인지개수];
+                for (int i = 0; i < 게임.레인지개수; i++) 레인지들[i] = new JButton("레인지"+(i+1));
 
             토핑패널 = new JPanel();
-                토핑재료들 = new JButton[Game.토핑재료이름들.length];
-                for (int i = 0; i < Game.토핑재료이름들.length; i++) 토핑재료들[i] = new JButton(Game.토핑재료이름들[i]);
+                토핑재료들 = new JButton[게임.토핑재료이름들.length];
+                for (int i = 0; i < 게임.토핑재료이름들.length; i++) 토핑재료들[i] = new JButton(게임.토핑재료이름들[i]);
 
             베이스재료패널 = new JPanel();
-                베이스재료들 = new JButton[Game.베이스재료이름들.length];
-                for (int i = 0; i < Game.베이스재료이름들.length; i++) 베이스재료들[i] = new JButton(Game.베이스재료이름들[i]);
+                베이스재료들 = new JButton[게임.베이스재료이름들.length];
+                for (int i = 0; i < 게임.베이스재료이름들.length; i++) 베이스재료들[i] = new JButton(게임.베이스재료이름들[i]);
 
         하단패널 = new JPanel();
             일시정지 = new JButton("일시정지");
@@ -221,6 +229,7 @@ public class GameFrame implements ActionListener {
         픽업대패널.setLayout(new GridLayout());
         for(int i=0; i<주문메뉴들.length; i++){
             픽업대패널.add(주문메뉴들[i]);
+            주문메뉴들[i].setBackground(베이스컬러);
         }
 
         y+=h; h=200;
@@ -234,6 +243,7 @@ public class GameFrame implements ActionListener {
         게임아이템패널.setLayout(new GridLayout(4,1));
         for(int i=0; i<게임아이템들.length; i++){
             게임아이템패널.add(게임아이템들[i]);
+            게임아이템들[i].setBackground(베이스컬러);
         }
 
         키친패널.add(음료패널);
@@ -241,6 +251,7 @@ public class GameFrame implements ActionListener {
         음료패널.setLayout(new GridLayout(2,1));
         for(int i=0; i<음료들.length; i++){
             음료패널.add(음료들[i]);
+            음료들[i].setBackground(베이스컬러);
         }
 
         키친패널.add(레인지패널);
@@ -248,20 +259,24 @@ public class GameFrame implements ActionListener {
         레인지패널.setLayout(new GridLayout());
         for(int i=0; i<레인지들.length; i++){
             레인지패널.add(레인지들[i]);
+            레인지들[i].setBackground(베이스컬러);
         }
+        레인지들[1].setEnabled(false); // TODL : 구매하면 true로 전환
 
         키친패널.add(토핑패널);
         토핑패널.setBorder(BorderFactory.createEmptyBorder(0 , 0 , 10 , 10));
         토핑패널.setLayout(new GridLayout(2,3));
-        for(int i=0; i<토핑재료들.length; i++){
+        for(int i=0; i<게임.토핑재료갯수; i++){
             토핑패널.add(토핑재료들[i]);
+            토핑재료들[i].setBackground(베이스컬러);
         }
 
         키친패널.add(베이스재료패널);
         베이스재료패널.setBorder(BorderFactory.createEmptyBorder(0 , 0 , 10 , 10));
         베이스재료패널.setLayout(new GridLayout());
-        for(int i=0; i<베이스재료들.length; i++){
+        for(int i=0; i<게임.베이스재료갯수; i++){
             베이스재료패널.add(베이스재료들[i]);
+            베이스재료들[i].setBackground(베이스컬러);
         }
 
         y+=h; h=50;
@@ -271,9 +286,25 @@ public class GameFrame implements ActionListener {
         하단패널.setBounds(0, y, 1000, h);
 //        정보패널.setBackground(SystemColor.red);
         하단패널.add(일시정지);
+        일시정지.setBackground(베이스컬러);
         하단패널.add(쓰레기통);
+        쓰레기통.setBackground(베이스컬러);
 
 
+    }
+
+    public void 초기화셋팅(){
+        // 주문메뉴 버튼들 베이스컬러 설정
+        for(int i=0; i<주문메뉴들.length; i++) 주문메뉴들[i].setBackground(베이스컬러);
+        // 게임 버튼들 활성화 설정
+        for(int i=0; i<게임아이템들.length; i++) 게임아이템들[i].setEnabled(true);
+
+//        for(int i=0; i<주문메뉴들.length; i++) 주문메뉴들[i].setBackground(베이스컬러);
+//        for(int i=0; i<게임아이템들.length; i++) 게임아이템들[i].setBackground(베이스컬러);
+//        for(int i=0; i<음료들.length; i++)음료들[i].setBackground(베이스컬러);
+//        for(int i=0; i<레인지들.length; i++)레인지들[i].setBackground(베이스컬러);
+//        for(int i=0; i<Game.토핑재료갯수; i++)토핑재료들[i].setBackground(베이스컬러);
+//        for(int i=0; i<Game.베이스재료갯수; i++)베이스재료들[i].setBackground(베이스컬러);
     }
 
     public void 버튼리스너등록(Game game) {// addActionListener

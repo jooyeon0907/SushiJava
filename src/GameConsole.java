@@ -3,12 +3,13 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class GameConsole {
-    Scanner 스캐너 = new Scanner(System.in);
     Game 게임;
 
     public GameConsole(Game 게임){this.게임 = 게임;}
 
-    public String 게임유저등록(){
+    public String 게임유저등록화면(){
+
+        Scanner 스캐너 = new Scanner(System.in);
         System.out.print("이름을 입력해주세요 : ");
         return  스캐너.nextLine();
     }
@@ -21,14 +22,13 @@ public class GameConsole {
                     1. 게임 시작
                     2. 나의 정보
                     3. 상점
-                    4. 종료
+                    4. 스시자바 종료
                     """);
         System.out.println(": 숫자를 입력해주세요.");
         대답 = 범위내_숫자대답받기(1, 4);
         switch(대답){
             case "1":
-//                게임.게임시작();
-                게임시작전화면출력();
+                게임미션출력();
                 break;
             case "2":
                 나의정보출력();
@@ -43,25 +43,29 @@ public class GameConsole {
         }//end switch
     }
 
-    public void 게임시작전화면출력() {
-        System.out.println("\n<레벨 "+게임.게임유저.게임레벨+">");
-        System.out.println("게임 통과 미션 : ");
-        System.out.println("1. 게임시작\n" +
-                "2. 부스터 아이템 장착하기\n" +
-                "3. 메인화면으로 돌아가기");
-        System.out.println("\n: 숫자를 입력해주세요.");
-        String 대답 = 범위내_숫자대답받기(1, 3);
-        switch (대답) {
-            case "1":
-                게임.게임시작();
-                break;
-            case "2":
-                게임.아이템장착();
-                break;
-            case "3":
-                메인화면출력();
-                break;
-        }
+    public void 게임미션출력() {
+        // 현재 레벨 및 게임미션 출력 후 게임 화면 띄우기
+        게임.게임미션.게임미션셋팅(게임.게임레벨);
+        System.out.println("-------------------------------------------");
+        System.out.println("\n<현재 레벨 : "+게임.게임레벨+">");
+//        String 게임미션 = "";
+        StringBuilder 게임미션 = new StringBuilder();
+        int num = 1;
+        if(게임.게임미션.목표매출!=0){ 게임미션.append(num++ + ". 목표매출 : ").append(게임.게임미션.목표매출).append("\n"); }
+        if(게임.게임미션.손님수!=0){ 게임미션.append(num++ + ". 손님수 : ").append(게임.게임미션.손님수).append("\n"); }
+        if(게임.게임미션.손님만족도수!=0){ 게임미션.append(num++ + ". 손님만족도수 : ").append(게임.게임미션.손님만족도수).append("\n"); }
+        if(게임.게임미션.음식판매수!=0){ 게임미션.append(num++ + ". 음식판매수 : ").append(게임.게임미션.음식판매수).append("\n"); }
+        if(게임.게임미션.불만족손님없기){ 게임미션.append(num++ + ". 불만족손님없기").append("\n"); }
+        if(게임.게임미션.음식버리지않기){ 게임미션.append(num++ + ". 음식버리지않기").append("\n"); }
+        if(게임.게임미션.음식태우지않기){ 게임미션.append(num++ + ". 음식태우지않기").append("\n"); }
+
+        System.out.println("<게임 통과 미션>");
+        System.out.println(게임미션);
+        System.out.println("-------------------------------------------");
+
+        // TODO :4초 후 시작 되도록 스레드 설정
+        게임.게임시작();
+
     }
 
     public void 게임결과창(){
@@ -70,8 +74,6 @@ public class GameConsole {
 
         // 레벨 통과 실패
             // 미션 달성 횟수
-
-
 
     } /////
 
@@ -106,6 +108,7 @@ public class GameConsole {
                 break;
             case "4":
                 보유아이템출력();
+                break;
             case "5":
                 메인화면출력();
                 break;
@@ -114,7 +117,6 @@ public class GameConsole {
     public void 유저정보출력(){
         System.out.println("\n<유저 정보>");
         System.out.println("이름 : " + 게임.게임유저.이름);
-        System.out.println("게임레벨 : " + 게임.게임유저.게임레벨);
         System.out.println("보유코인수 : " + 게임.게임유저.보유코인수);
 
         System.out.print("\n1. 나의 정보화면으로 돌아가기");
@@ -128,7 +130,7 @@ public class GameConsole {
         System.out.println("--베이스 재료----------------------");
         System.out.println("이름\t\t\t품질\t\t\t가격");
         System.out.println("---------------------------------");
-        for (int i = 0; i < 게임.베이스재료들.size(); i++){
+        for (int i = 0; i < 게임.베이스재료갯수; i++){
             BaseIngredient 베이스재료 = 게임.베이스재료들.get(i);
             System.out.println(베이스재료.이름 + "\t\t\t" +  베이스재료.품질  +"\t\t\t" + 베이스재료.가격);
         }
@@ -136,7 +138,7 @@ public class GameConsole {
         System.out.println("\n--토핑 재료----------------------");
         System.out.println("이름\t\t\t품질\t\t\t가격");
         System.out.println("--------------------------------");
-        for (int i = 0; i < 게임.토핑대들.size(); i++){
+        for (int i = 0; i < 게임.토핑재료갯수; i++){
             ToppingIngredient 토핑재료 = 게임.토핑대들.get(i).토핑재료;
             System.out.println(토핑재료.이름 + "\t\t\t" +  토핑재료.품질  +"\t\t\t" + 토핑재료.가격);
         }
@@ -191,7 +193,12 @@ public class GameConsole {
     }
     public void 보유아이템출력(){
         System.out.println("<보유 아이템>");
-
+        System.out.println("이름\t\t\t\t개수");
+        System.out.println("------------------------------");
+        for (int i = 0; i < 게임.게임유저.게임아이템들.size(); i++){
+            GameItem 게임아이템 = 게임.게임유저.게임아이템들.get(i);
+            System.out.println(게임아이템.이름 + "\t\t\t\t" + 게임아이템.개수);
+        }
         System.out.print("\n1. 나의 정보화면으로 돌아가기");
         System.out.println("\n2. 메인화면으로 돌아가기");
         String 대답 = 범위내_숫자대답받기(1, 2);
@@ -230,19 +237,20 @@ public class GameConsole {
 
     public String 재료가격출력(int no, String 재료이름, int 품질, ArrayList<HashMap> 재료가격표 ){
         String result = null;
-        if(품질<Game.재료최고품질){
-                result = no+". "+재료이름+"(품질"+품질+") "+재료가격표.get(품질-1).get("재료가격")+"코인" +
-                          " -> "+재료이름+"(품질"+(품질+1)+") "+재료가격표.get(품질).get("재료가격")+"코인  " +
+        if(품질<게임.재료최고품질){
+                result = no+". "+재료이름+" :   품질"+품질+"/"+재료가격표.get(품질-1).get("재료가격")+"코인" +
+                          " -> " + "품질"+(품질+1)+"/"+재료가격표.get(품질).get("재료가격")+"코인  " +
                             "--->>>업그레이드 "+재료가격표.get(품질).get("업그레이드가격")+"코인<<<---";
-        }else{ result = no +". "+재료이름+"(품질"+품질+") "+재료가격표.get(품질-1).get("재료가격")+"코인\t\t\t----------최고 품질----------"; }
+        }else{ result = no +". "+재료이름+" :   품질"+품질+"/"+재료가격표.get(품질-1).get("재료가격")+"코인\t\t\t----------최고 품질----------"; }
         return result;
     }
     public void 재료업그레이드_화면출력() {
+//        System.out.println("재료업그레이드_화면출력");
         int num = 1;
         ArrayList<KitchenIngredient> 주방재료들 = new ArrayList<>();
         System.out.println("\n<재료 업그레이드>");
         System.out.println("--베이스 재료----------------------");
-        for (int i = 0; i < 게임.베이스재료들.size(); i++){
+        for (int i = 0; i < 게임.베이스재료갯수; i++){
             BaseIngredient 베이스재료 = 게임.베이스재료들.get(i);
             주방재료들.add(베이스재료);
             ArrayList<HashMap> 베이스재료가격표 = 베이스재료.가격표;
@@ -250,7 +258,7 @@ public class GameConsole {
         }
 
         System.out.println("\n--토핑 재료----------------------");
-        for (int i = 0; i < 게임.토핑대들.size(); i++){
+        for (int i = 0; i < 게임.토핑재료갯수; i++){
             ToppingIngredient 토핑재료 = 게임.토핑대들.get(i).토핑재료;
             주방재료들.add(토핑재료);
             ArrayList<HashMap> 토핑재료가격표 = 토핑재료.가격표;
@@ -271,10 +279,10 @@ public class GameConsole {
             if(대답.equals(Integer.toString(num))){상점_화면출력(); break; }
             else{ // 최고 품질인지 아닌지 확인
                 KitchenIngredient 주방재료 = 주방재료들.get(Integer.parseInt(대답)-1);
-                if(주방재료.품질 < Game.재료최고품질){
+                if(주방재료.품질 < 게임.재료최고품질){
                     System.out.println("'"+주방재료.이름+"' 재료를 " +
                         "업그레이드("+주방재료.가격표.get(주방재료.품질).get("업그레이드가격")+"코인) 하시겠습니까? (1.예/2.아니오)");
-                    String 업그레이드대답 = 범위내_숫자대답받기(1,num);
+                    String 업그레이드대답 = 범위내_숫자대답받기(1,2);
                     if(업그레이드대답.equals("1")){
                         boolean 재료업그레이드완료 = 주방재료.재료업그레이드(게임.게임유저);
                          if(재료업그레이드완료){ 재료업그레이드_화면출력();  break; }
@@ -287,7 +295,7 @@ public class GameConsole {
                 }
             }
         } //end while
-        // TODO: 화면 돌아가는 위치 - 반복문에서 탈출하하여 불린으로 판단하여 화면 전환해도 괜찮은 시나리오일지..>
+        // TODO: 화면 돌아가는 위치 - 반복문에서 탈출하여 불린으로 판단하여 화면 전환해도 괜찮은 시나리오일지..>
 //        if(상점돌아가기) 상점_화면출력();
 //        else if(재료업그레이드완료) 재료업그레이드_화면출력();
     }
@@ -296,24 +304,24 @@ public class GameConsole {
     public String 장비가격출력(int no, String 장비이름, int 품질, ArrayList<HashMap> 장비가격표 ){
         String result = null;
         if(품질==0){
-            result = no + ". " + 장비이름 + "(없음)   " + 장비가격표.get(품질).get("장비시간")+"초                      " +
+            result = no + ". " + 장비이름 + " :     없음       " +
+                      " -> " + "/품질" + (품질+1) + "/" + 장비가격표.get(품질).get("장비시간")+"초  " +
                             "---->>>구매 "+장비가격표.get(품질).get("업그레이드가격")+"코인<<<----";
-        }else if(품질<Game.장비최고품질){
-            result = no+". " + 장비이름 + "(품질" + 품질 + ") " + 장비가격표.get(품질-1).get("장비시간") + "초" +
-                      " -> " + 장비이름 + "(품질" + (품질+1) + ") " + 장비가격표.get(품질).get("장비시간")+"초  " +
+        }else if(품질<게임.장비최고품질){
+            result = no+". " + 장비이름 + " :    품질" + 품질 + "/" + 장비가격표.get(품질-1).get("장비시간") + "초" +
+                      " -> " + "품질" + (품질+1) + "/" + 장비가격표.get(품질).get("장비시간")+"초  " +
                         "--->>>업그레이드 " + 장비가격표.get(품질).get("업그레이드가격") + "코인<<<---";
-        }else{ result = no + ". " + 장비이름 + "(품질" + 품질 + ") " + 장비가격표.get(품질-1).get("장비시간") + "초\t\t\t----------최고 품질----------"; }
+        }else{ result = no + ". " + 장비이름 + " :  품질" + 품질 + "/" + 장비가격표.get(품질-1).get("장비시간") + "초\t\t\t----------최고 품질----------"; }
         return result;
     }
-    public void 장비업그레이드_화면출력() {
+    public void 장비업그레이드_화면출력() { // TODO : 레벨에 맞게 토핑대 출력되도록 (ex 레벨1 일떄도 장어/한우/참치 토핑대가 나타남)
         int num = 1;
-        ArrayList<KitchenEquipment> 주방장비들 = new ArrayList<>();
+        ArrayList<KitchenEquipment> 주방장비들 = new ArrayList<>(); // TODO : 주방장비들을 게임 클래스에서 셋팅할지?
         System.out.println("\n<장비 업그레이드>");
         System.out.println("--조리 시간 업그레이드-----------------------");
         for (int i = 0; i < 게임.레인지들.size(); i++){
             Range 레인지 = 게임.레인지들.get(i);
             ArrayList<HashMap> 레인지가격표 = 레인지.가격표;
-            // TODO: 품질 0은 업그레이드가 아니라 구매로 표시하기
             System.out.println(장비가격출력(num++, 레인지.이름, 레인지.품질, 레인지가격표 ));
             주방장비들.add(레인지);
         }
@@ -338,11 +346,11 @@ public class GameConsole {
             if(대답.equals(Integer.toString(num))){상점_화면출력(); break; }
             else{ // 최고 품질인지 아닌지 확인
                 KitchenEquipment 주방장비 = 주방장비들.get(Integer.parseInt(대답)-1);
-                if(주방장비.품질 < Game.장비최고품질){
+                if(주방장비.품질 < 게임.장비최고품질){
                     String 업그레이드or구매 = 주방장비.품질>0? "업그레이드" : "구매";
                     System.out.println("'"+주방장비.이름+"' 재료를 " +
                         업그레이드or구매 + "("+주방장비.가격표.get(주방장비.품질).get("업그레이드가격")+"코인) 하시겠습니까? (1.예/2.아니오)");
-                    String 업그레이드대답 = 범위내_숫자대답받기(1,num);
+                    String 업그레이드대답 = 범위내_숫자대답받기(1,2);
                     if(업그레이드대답.equals("1")){
                         boolean 장비업그레이드완료 = 주방장비.장비업그레이드(게임.게임유저);
                          if(장비업그레이드완료){ 장비업그레이드_화면출력();  break; }
@@ -362,11 +370,11 @@ public class GameConsole {
         int num = 0;
         // 아이템들.get(i)  아이템 불러오기
         System.out.println("\n<아이템 구매>");
-        for (int i = 0; i < 게임.게임아이템들.size(); i++){
-            GameItem 게임아이템 = 게임.게임아이템들.get(i);
-            System.out.println((i+1) + ". " + 게임아이템.이름 + " ("+ 게임아이템.가격+"원)\t\t" +
+        for (int i = 0; i < 게임.게임유저.게임아이템들.size(); i++){
+            GameItem 게임아이템 = 게임.게임유저.게임아이템들.get(i);
+            System.out.println((i+1) + ". " + 게임아이템.이름 + " ("+ 게임아이템.가격+"코인)\t\t" +
                                         "보유개수 : " + 게임아이템.개수 +"개");
-            System.out.print("\t - ");게임.게임아이템들.get(i).아이템설명();
+            System.out.print("\t - ");게임.게임유저.게임아이템들.get(i).아이템설명();
             num++;
         }
 
@@ -376,7 +384,7 @@ public class GameConsole {
             String 대답 = 범위내_숫자대답받기(1,num);
             if(대답.equals(Integer.toString(num))){상점_화면출력(); break; }
             else{
-                GameItem 게임아이템 = 게임.게임아이템들.get(Integer.parseInt(대답)-1);
+                GameItem 게임아이템 = 게임.게임유저.게임아이템들.get(Integer.parseInt(대답)-1);
                 System.out.println("'"+게임아이템.이름+"' 아이템("+게임아이템.가격+")을 구매하시겠습니까? (1.예/2.아니오)");
                 String 업그레이드대답 = 범위내_숫자대답받기(1,num);
                 if(업그레이드대답.equals("1")){
@@ -393,8 +401,12 @@ public class GameConsole {
 //end 상점/////////////////////////////////////////////////////
 
 
-
-
+    public void 게임종료화면출력(){
+        System.out.println("게임이 종료되었습니다.");
+//        게임.게임미션.게임결과 = false; // TODO :
+//        게임.게임미션.게임결과출력();
+        메인화면출력();
+    }
 
 
 
@@ -416,13 +428,12 @@ public class GameConsole {
                 게임.일시정지 = false;
                 break;
             case 2:
-                게임.게임종료();
+                게임.게임종료(false, false);
                 게임.게임시작();
                 게임.일시정지 = false;
                 break;
             case 3:
-                System.out.println("게임을 종료합니다.");
-                메인화면출력();
+                게임종료화면출력();
                 break;
         }
     }
@@ -439,6 +450,7 @@ public class GameConsole {
         return result;
     }
     public String 범위내_숫자대답받기(int min, int max){
+        Scanner 스캐너 = new Scanner(System.in);
         String 대답 = null;
         while(true){
             System.out.print("> " );

@@ -8,10 +8,6 @@ public class BaseIngredient extends KitchenIngredient { // 베이스 재료
         super(이름, 가격);
     }
 
-    public void 베이스재료업그레이드(String 이름, int 현재품질){ //
-
-    }
-    
     public String 조리된이름(){
         String 이름 = null; 
         switch(this.이름){

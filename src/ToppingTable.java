@@ -1,4 +1,5 @@
 public class ToppingTable extends KitchenEquipment {
+    Food 조리음식;
     ToppingIngredient 토핑재료;
 
     public ToppingTable(){}
@@ -10,7 +11,7 @@ public class ToppingTable extends KitchenEquipment {
         this.토핑재료 = 토핑재료;
     }
 
-    public void 조리하기(Food 조리음식){
+    public void 토핑하기(Food 조리음식, int 위치){// TODO 쓰레드
         this.조리음식 = 조리음식;
         System.out.println(this.이름 +  "에서 " + this.조리음식.이름 + " 토핑 시작");
         // 조리시간 타이머 스레드 시작
@@ -20,7 +21,13 @@ public class ToppingTable extends KitchenEquipment {
         this.조리음식.조리상태 = 3;
         StringBuffer sb = new StringBuffer();
         this.조리음식.이름 = String.valueOf(sb.append(this.토핑재료.이름).append(this.조리음식.이름));
+        Game.gameFrame.set토핑완료(this.조리음식.이름, 위치);
     }
 
+    public void 장비초기화(int 위치){
+        super.장비초기화();
+        this.조리음식 = null;
+        Game.gameFrame.init토핑대(위치);
+    }
 
 }

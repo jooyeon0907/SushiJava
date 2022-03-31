@@ -53,7 +53,7 @@ public class Test {
             // 두번째 p 태그 - 진행상태
             // 세번째 p 태그 - 시간
             // </html>
-            GameFrame gameFrame = new GameFrame();
+            GameFrame gameFrame = new GameFrame(new Game());
 
             String 이름태그 = "<p>"+"쌀"+"</p>";
             String 진행상태태그 = "<p>"+"조리중"+"</p>";
